@@ -6,8 +6,16 @@
 
 <div class="row">
 	<div class="col-md-6 offset-md-3">
-		
+
 		<h2>Kullanici kayit form</h2>
+
+
+		@if (TempData["SuccessMessage"] != null)
+		{
+			<div class="alert alert-info" role="alert">
+				@TempData["SuccessMessage"]
+			</div>
+		}
 
 		<form asp-controller="Home" asp-action="SignUp" method="post">
 
