@@ -5,16 +5,27 @@ namespace AspNetCoreIdentityApp.Web.ViewModels;
 
 public class SignUpViewModel
 {
+    [Required(ErrorMessage = "Kullanici Ad alani bos biraxilamaz")]
     [Display(Name ="Kullanici Adi: ")]
     public string Username { get; set; }
-    [Display(Name = "Email: ")]
+
+    [EmailAddress(ErrorMessage ="Email formati yanlistir")]
+	[Required(ErrorMessage = "Kullanici Email alani bos biraxilamaz.")]
+	[Display(Name = "Email: ")]
     public string Email { get; set; }
-    [Display(Name = "Telefon: ")]
+
+	[Required(ErrorMessage = "Kullanici Telefon alani bos biraxilamaz.")]
+	[Display(Name = "Telefon: ")]
     public string Phone { get; set; }
-    [Display(Name = "Parol: ")]
+
+
+	[Required(ErrorMessage = "Kullanici Parol alani bos biraxilamaz.")]
+	[Display(Name = "Parol: ")]
     public string Password { get; set; }
 
-    [Display(Name = "Parol Tekrar: ")]
+    [Compare(nameof(Password),ErrorMessage ="Sifre ayni deyildir.")]
+	[Required(ErrorMessage = "Kullanici Parol Tekrar alani bos biraxilamaz")]
+	[Display(Name = "Parol Tekrar: ")]
     public string PasswordConfirm { get; set; }
 
 

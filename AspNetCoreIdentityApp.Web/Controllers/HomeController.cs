@@ -39,6 +39,11 @@ public class HomeController : Controller
 	[HttpPost]
 	public async Task<IActionResult> SignUp(SignUpViewModel request)
 	{
+		if(!ModelState.IsValid)
+		{
+			return View();
+		}
+
 		// identity-ni userManager ile yaratmaga calisiriq
 		var identityResult = await _userManager.CreateAsync(new AppUser
 		{
