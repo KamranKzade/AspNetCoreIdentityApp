@@ -1,4 +1,5 @@
-﻿using AspNetCoreIdentityApp.Web.Models;
+﻿using AspNetCoreIdentityApp.Web.CustomValidation;
+using AspNetCoreIdentityApp.Web.Models;
 
 namespace AspNetCoreIdentityApp.Web.Extentions;
 
@@ -17,10 +18,11 @@ public static class StartUpExtensions
 			opt.Password.RequiredLength = 6;
 			opt.Password.RequireNonAlphanumeric = false;
 			opt.Password.RequireLowercase = true;
-			opt.Password.RequireUppercase = true;
+			opt.Password.RequireUppercase = false;
 			opt.Password.RequireDigit = false;
 
 
-		}).AddEntityFrameworkStores<AppDbContext>();
+		}).AddPasswordValidator<PasswordValidator>()
+		.AddEntityFrameworkStores<AppDbContext>();
 	}
 }
