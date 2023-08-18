@@ -36,10 +36,16 @@ public class HomeController : Controller
 		return View();
 	}
 
+	[HttpGet]
+	public IActionResult SignIn()
+	{
+		return View();
+	}
+
 	[HttpPost]
 	public async Task<IActionResult> SignUp(SignUpViewModel request)
 	{
-		if(!ModelState.IsValid)
+		if (!ModelState.IsValid)
 		{
 			return View();
 		}
