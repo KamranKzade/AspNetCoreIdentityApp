@@ -22,7 +22,8 @@ public static class StartUpExtensions
 			opt.Password.RequireDigit = false;
 
 
-		}).AddPasswordValidator<PasswordValidator>()
+		}).AddUserValidator<UserValidator>()
+		.AddPasswordValidator<PasswordValidator>()
 		.AddEntityFrameworkStores<AppDbContext>();
 	}
 }
