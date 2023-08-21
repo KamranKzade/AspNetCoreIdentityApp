@@ -83,7 +83,7 @@ public class HomeController : Controller
 	[HttpPost]
 	public async Task<IActionResult> SignIn(SignInViewModel model, string? returnUrl = null)
 	{
-		returnUrl = returnUrl ?? Url.Action("Index", "Home");
+		returnUrl ??= Url.Action("Index", "Home");
 
 		// Emaile gore useri axtaririq
 		var hasUser = await _userManager.FindByEmailAsync(model.Email);
@@ -105,7 +105,7 @@ public class HomeController : Controller
 
 		if (signInResult.Succeeded)
 		{
-			return Redirect(returnUrl);
+			return Redirect(returnUrl!);
 		}
 
 		if (signInResult.IsLockedOut)
@@ -146,7 +146,7 @@ public class HomeController : Controller
 		// Ilk google hesabinizi honetine gedib --> Security --> App passwords --> Yeni bir uygulama ve sifre olustururuq, 
 		// hansi ki, google uzerinde mail gondere bilek deye
 
-		await _emailService.SendResetPasswordEmail(passswordResetLink, hasUser.Email);
+		await _emailService.SendResetPasswordEmail(passswordResetLink!, hasUser.Email);
 
 
 		TempData["SuccessMessage"] = "Şifre yeniləmə linkiç e-posta adressinizə göndərilmişdir";
@@ -166,15 +166,15 @@ public class HomeController : Controller
 	[HttpPost]
 	public async Task<IActionResult> ResetPassword(ResetPasswordViewModel request)
 	{
-		var userId = TempData["userId"].ToString();
-		var token = TempData["token"].ToString();
+		var userId = TempData["userId"];
+		var token = TempData["token"];
 
-		if(userId== null || token==null)
+		if (userId == null || token == null)
 		{
 			throw new Exception("Bir hata meydana gəldi");
 		}
 
-		var hasUser = await _userManager.FindByIdAsync(userId);
+		var hasUser = await _userManager.FindByIdAsync(userId.ToString()!);
 
 		if (hasUser == null)
 		{
@@ -182,7 +182,7 @@ public class HomeController : Controller
 			return View();
 		}
 
-		var result = await _userManager.ResetPasswordAsync(hasUser, token, request.Password);
+		var result = await _userManager.ResetPasswordAsync(hasUser, token.ToString()!, request.Password);
 
 		if (result.Succeeded)
 		{

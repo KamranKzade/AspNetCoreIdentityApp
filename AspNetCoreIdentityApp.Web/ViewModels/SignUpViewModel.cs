@@ -33,7 +33,7 @@ public class SignUpViewModel
     public SignUpViewModel() { }
 
 
-    public SignUpViewModel(string? username, string? email, string? phone, string? password)
+    public SignUpViewModel(string username, string email, string phone, string password)
     {
         Username = username;
         Email = email;
