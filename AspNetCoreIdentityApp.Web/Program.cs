@@ -20,10 +20,10 @@ builder.Services.ConfigureApplicationCookie(opt =>
 {
 	var cookieBuilder = new CookieBuilder();
 	cookieBuilder.Name = "UdemyCookie";
-	
+
 	// Login Path-in veririk
 	opt.LoginPath = new PathString("/Home/SignIn");
-
+	opt.LogoutPath = new PathString("/Member/LogOut");
 	opt.Cookie = cookieBuilder;
 	// Cookie-nin muddeti
 	opt.ExpireTimeSpan = TimeSpan.FromDays(30);
@@ -51,11 +51,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 // Area-lar ile islemek ucun
 app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+	name: "areas",
+	pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+	name: "default",
+	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

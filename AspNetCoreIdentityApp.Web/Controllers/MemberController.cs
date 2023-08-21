@@ -14,10 +14,10 @@ public class MemberController : Controller
 		_signInManager = signInManager;
 	}
 
-	public async Task<IActionResult> LogOut()
+	public async Task LogOut()
 	{
 		await _signInManager.SignOutAsync();
-		return RedirectToAction("Index", "Home");
+		// return RedirectToAction("Index", "Home");
 	}
 
 }

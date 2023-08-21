@@ -1,16 +1,15 @@
-﻿﻿@if(User.Identity!.IsAuthenticated)
+﻿﻿@if (User.Identity!.IsAuthenticated)
 {
-    <ul class="navbar-nav me-0">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                @User.Identity.Name
-            </a>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" asp-controller="Member" asp-action="LogOut">Çıkış yap</a></li>
-
-            </ul>
-        </li>
-    </ul>
+	<ul class="navbar-nav me-0">
+		<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+				@User.Identity.Name
+			</a>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" asp-route-returnUrl="/Home/Index" asp-controller="Member" asp-action="LogOut">Çıkış yap</a></li>
+			</ul>
+		</li>
+	</ul>
 }
 else
 
