@@ -5,16 +5,16 @@ namespace AspNetCoreIdentityApp.Web.ViewModels;
 
 public class SignInViewModel
 {
-	[EmailAddress(ErrorMessage = "Email formati yanlistir")]
-	[Required(ErrorMessage = "Email alani bos biraxilamaz.")]
+	[EmailAddress(ErrorMessage = "Email formatı yanlıştır")]
+	[Required(ErrorMessage = "Email alanı boş bıraxılamaz.")]
 	[Display(Name = "Email: ")]
 	public string Email { get; set; }
 
-	[Required(ErrorMessage = "Parol alani bos biraxilamaz.")]
+	[Required(ErrorMessage = "Parol alanı boş bıraxılamaz.")]
 	[Display(Name = "Parol: ")]
 	public string Password { get; set; }
 
-	[Display(Name = "Beni xatirla ")]
+	[Display(Name = "Məni xatırla ")]
 	public bool RememberMe { get; set; }
 
 	public SignInViewModel() { }

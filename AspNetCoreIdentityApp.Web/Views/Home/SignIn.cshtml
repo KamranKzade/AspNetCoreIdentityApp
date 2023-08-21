@@ -4,11 +4,16 @@
 
 @model SignInViewModel
 
+@*Client Validationi elave edirik, ValidationScriptPartialda gelir ordan gotururuk. Istifade meqsedi her defe back-ende sorgu atmamaq ve bizim data annotation ile verdiyimiz validationlari yerindece gostermek*@
+@section Scripts
+	{
+	@await Html.PartialAsync("_ValidationScriptsPartial.cshtml")
+}
 
 <div class="row">
 	<div class="col-md-4 offset-md-4">
 		<h2>Kullanıcı Giriş </h2>
-		
+
 		<div asp-validation-summary=ModelOnly class="alert alert-danger" role="alert"></div>
 
 		<form asp-controller="Home" asp-action="SignIn" asp-route-returnUrl="@Context.Request.Query["returnUrl"]" method="post">
@@ -28,11 +33,15 @@
 						<input type="checkbox" class="form-check-input" asp-for="RememberMe">
 						<label class="form-check-label" for="RememberMe" asp-for="RememberMe"></label>
 					</div>
+				</div>
 
+				<div class="col-md-6" me-0>
+					<a class="btn btn-outline-secondary btn-sm float-end" asp-controller="Home" asp-action="ResetPassword">Şifrəmi unutdum</a>
 				</div>
 			</div>
 
 			<button type="submit" class="btn btn-primary">Üye Giriş</button>
+
 		</form>
 	</div>
 </div>

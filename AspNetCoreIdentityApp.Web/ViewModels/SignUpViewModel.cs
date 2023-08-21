@@ -5,27 +5,27 @@ namespace AspNetCoreIdentityApp.Web.ViewModels;
 
 public class SignUpViewModel
 {
-    [Required(ErrorMessage = "Kullanici Ad alani bos biraxilamaz")]
-    [Display(Name ="Kullanici Adi: ")]
+    [Required(ErrorMessage = "Kullanıcı Ad alanı boş bıraxılamaz.")]
+    [Display(Name = "Kullanıcı Adi: ")]
     public string Username { get; set; }
 
     [EmailAddress(ErrorMessage ="Email formati yanlistir")]
-	[Required(ErrorMessage = "Kullanici Email alani bos biraxilamaz.")]
+	[Required(ErrorMessage = "Kullanıcı Email alanı boş bıraxılamaz.")]
 	[Display(Name = "Email: ")]
     public string Email { get; set; }
 
-	[Required(ErrorMessage = "Kullanici Telefon alani bos biraxilamaz.")]
+	[Required(ErrorMessage = "Kullanıcı Telefon alanı boş bıraxılamaz.")]
 	[Display(Name = "Telefon: ")]
     public string Phone { get; set; }
 
 
-	[Required(ErrorMessage = "Kullanici Parol alani bos biraxilamaz.")]
+	[Required(ErrorMessage = "Kullanıcı Parol alanı boş bıraxılamaz.")]
 	[Display(Name = "Parol: ")]
     public string Password { get; set; }
 
     [Compare(nameof(Password),ErrorMessage ="Sifre ayni deyildir.")]
-	[Required(ErrorMessage = "Kullanici Parol Tekrar alani bos biraxilamaz")]
-	[Display(Name = "Parol Tekrar: ")]
+	[Required(ErrorMessage = "Kullanıcı Parol Təkrar alanı boş bıraxılamaz.")]
+	[Display(Name = "Parol Təkrar: ")]
     public string PasswordConfirm { get; set; }
 
 
