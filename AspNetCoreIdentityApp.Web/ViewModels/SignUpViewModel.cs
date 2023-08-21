@@ -18,12 +18,13 @@ public class SignUpViewModel
 	[Display(Name = "Telefon: ")]
     public string Phone { get; set; }
 
-
+	[DataType(DataType.Password)]
 	[Required(ErrorMessage = "Kullanıcı Parol alanı boş bıraxılamaz.")]
 	[Display(Name = "Parol: ")]
     public string Password { get; set; }
 
-    [Compare(nameof(Password),ErrorMessage ="Sifre ayni deyildir.")]
+	[DataType(DataType.Password)]
+	[Compare(nameof(Password),ErrorMessage ="Sifre ayni deyildir.")]
 	[Required(ErrorMessage = "Kullanıcı Parol Təkrar alanı boş bıraxılamaz.")]
 	[Display(Name = "Parol Təkrar: ")]
     public string PasswordConfirm { get; set; }

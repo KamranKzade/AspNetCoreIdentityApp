@@ -5,6 +5,7 @@ using AspNetCoreIdentityApp.Web.Models;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Web.ViewModels;
 using AspNetCoreIdentityApp.Web.Services;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -151,6 +152,50 @@ public class HomeController : Controller
 		TempData["SuccessMessage"] = "Şifre yeniləmə linkiç e-posta adressinizə göndərilmişdir";
 
 		return RedirectToAction(nameof(ForgetPassword));
+	}
+
+
+	public async Task<IActionResult> ResetPassword(string userId, string token)
+	{
+		TempData["userId"] = userId;
+		TempData["token"] = token;
+
+		return View();
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> ResetPassword(ResetPasswordViewModel request)
+	{
+		var userId = TempData["userId"].ToString();
+		var token = TempData["token"].ToString();
+
+		if(userId== null || token==null)
+		{
+			throw new Exception("Bir hata meydana gəldi");
+		}
+
+		var hasUser = await _userManager.FindByIdAsync(userId);
+
+		if (hasUser == null)
+		{
+			ModelState.AddModelError(string.Empty, "Kullanıcı bulunamamıştır");
+			return View();
+		}
+
+		var result = await _userManager.ResetPasswordAsync(hasUser, token, request.Password);
+
+		if (result.Succeeded)
+		{
+			TempData["SuccessMessage"] = "Şifrenin başarı ilə yenilənmişdir";
+		}
+		else
+		{
+			ModelState.AddModelErrorList(result.Errors.Select(x => x.Description).ToList());
+			return View();
+		}
+
+
+		return View();
 	}
 
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -10,10 +10,12 @@ public class SignInViewModel
 	[Display(Name = "Email: ")]
 	public string Email { get; set; }
 
+	[DataType(DataType.Password)]
 	[Required(ErrorMessage = "Parol alanı boş bıraxılamaz.")]
 	[Display(Name = "Parol: ")]
 	public string Password { get; set; }
 
+	[DataType(DataType.Password)]
 	[Display(Name = "Məni xatırla ")]
 	public bool RememberMe { get; set; }
 
