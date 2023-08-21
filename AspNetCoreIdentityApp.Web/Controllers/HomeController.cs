@@ -1,4 +1,5 @@
-﻿using AspNetCoreIdentityApp.Web.Models;
+﻿using AspNetCoreIdentityApp.Web.Extentions;
+using AspNetCoreIdentityApp.Web.Models;
 using AspNetCoreIdentityApp.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +13,16 @@ public class HomeController : Controller
 
 	// Kullanici ile bagli butun isleri heyata keciren classdir
 	private readonly UserManager<AppUser> _userManager;
+	private readonly SignInManager<AppUser> _signInManager;
 
 
-	public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager)
+	public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
 	{
 		_logger = logger;
 		_userManager = userManager;
+		_signInManager = signInManager;
 	}
+
 
 	public IActionResult Index()
 	{
@@ -66,15 +70,45 @@ public class HomeController : Controller
 			return RedirectToAction(nameof(HomeController.SignUp));
 		}
 
-		// identity ugurla olmasa, bu zaman artiq erroru ekrana cixaririq.
-		foreach (IdentityError item in identityResult.Errors)
-		{
-			ModelState.AddModelError(string.Empty, item.Description);
-		}
+		// identity ugurla olmasa, bu zaman artiq erroru ekrana cixaririq. Extenstion method ile yazdiq
+		ModelState.AddModelErrorList(identityResult.Errors.Select(x => x.Description).ToList());
 
 		return View();
 	}
 
+
+	[HttpPost]
+	public async Task<IActionResult> SignIn(SignInViewModel model, string? returnUrl = null)
+	{
+		returnUrl = returnUrl ?? Url.Action("Index", "Home");
+
+		// Emaile gore useri axtaririq
+		var hasUser = await _userManager.FindByEmailAsync(model.Email);
+
+		// Eger user yoxdusa onda error messagi cixaririq ekrana
+		if (hasUser == null)
+		{
+			ModelState.AddModelError(string.Empty, "Email veya sifre yanlisdir");
+			return View();
+		}
+
+		// Eger varsa SignInManager uzerinden gelen PasswordSignInAsync metodu ile giris elemeye calisir,
+		// yeni uygun username-e uygun parolunda duzgun olub olmadigini yoxlayiriq
+		// hasUser				  --> emaile uygun gelen userdir
+		// model.Password		  --> paroldur
+		// model.RememberMe		  --> cookiede tutub, yazilan mail ve passwordu yadda saxlayib saxlamamaqdi ( bool ) 
+		// lockoutOnFailure:false --> nece girisden sonra hesabi mueyyen muddetlik kilidlemekdir ( bool )
+		var signInResult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe, lockoutOnFailure: false);
+
+		if (signInResult.Succeeded)
+		{
+			return Redirect(returnUrl!);
+		}
+
+		ModelState.AddModelErrorList(new List<string>() { "Email veya sifre yanlisdir" });
+
+		return View();
+	}
 
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public IActionResult Error()
