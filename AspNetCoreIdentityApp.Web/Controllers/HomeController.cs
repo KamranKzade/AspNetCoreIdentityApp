@@ -102,7 +102,7 @@ public class HomeController : Controller
 
 		if (signInResult.Succeeded)
 		{
-			return Redirect(returnUrl!);
+			return Redirect(returnUrl);
 		}
 
 		if (signInResult.IsLockedOut)
@@ -111,7 +111,7 @@ public class HomeController : Controller
 			return View();
 		}
 
-		ModelState.AddModelErrorList(new List<string>() { "Email veya sifre yanlis", $"Basarisiz giris sayisi ={await _userManager.GetAccessFailedCountAsync(hasUser)}" });
+		ModelState.AddModelErrorList(new List<string>() { "Email veya sifre yanlis", $"Basarisiz giris sayisi ={ await _userManager.GetAccessFailedCountAsync(hasUser)}" });
 
 		return View();
 	}
