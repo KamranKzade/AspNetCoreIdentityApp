@@ -1,6 +1,9 @@
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Web.Models;
+using AspNetCoreIdentityApp.Web.OptionsModels;
+using AspNetCoreIdentityApp.Web.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +15,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"));
 });
 
+// Burada biz framework-e basa saliriqki, hansisa 1 classin constructorunda
+// IOptions<EmailSettings> gorsen, get datalari EmailSettingsden oxu
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 // Identittyni sisteme elave edirik
 builder.Services.AddIdentityWithExtention();
+
+// Request ve responce dongusu oldugu ucun scop veririk
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Cookie-ni appin Configuration-a tanitmaq
 builder.Services.ConfigureApplicationCookie(opt =>

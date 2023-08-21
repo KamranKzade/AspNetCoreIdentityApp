@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using AspNetCoreIdentityApp.Web.Models;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Web.ViewModels;
+using AspNetCoreIdentityApp.Web.Services;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -14,13 +15,14 @@ public class HomeController : Controller
 	// Kullanici ile bagli butun isleri heyata keciren classdir
 	private readonly UserManager<AppUser> _userManager;
 	private readonly SignInManager<AppUser> _signInManager;
+	private readonly IEmailService _emailService;
 
-
-	public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+	public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService)
 	{
 		_logger = logger;
 		_userManager = userManager;
 		_signInManager = signInManager;
+		_emailService = emailService;
 	}
 
 
@@ -135,11 +137,15 @@ public class HomeController : Controller
 
 		string passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(hasUser);
 
-		var passswordResetLink = Url.Action("ResetPassword", "Home", new { userId = hasUser.Id, Token = passwordResetToken });
+		var passswordResetLink = Url.Action("ResetPassword", "Home", new { userId = hasUser.Id, Token = passwordResetToken }, HttpContext.Request.Scheme);
 
 		// ornek link htpps://localhost:7111?userId=12213&token=asdasdsadasdasdasda
 
 		// Email Service
+		// Ilk google hesabinizi honetine gedib --> Security --> App passwords --> Yeni bir uygulama ve sifre olustururuq, 
+		// hansi ki, google uzerinde mail gondere bilek deye
+
+		await _emailService.SendResetPasswordEmail(passswordResetLink, hasUser.Email);
 
 
 		TempData["SuccessMessage"] = "Şifre yeniləmə linkiç e-posta adressinizə göndərilmişdir";
