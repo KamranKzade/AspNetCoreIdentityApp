@@ -111,15 +111,40 @@ public class HomeController : Controller
 			return View();
 		}
 
-		ModelState.AddModelErrorList(new List<string>() { "Email veya sifre yanlis", $"Basarisiz giris sayisi ={ await _userManager.GetAccessFailedCountAsync(hasUser)}" });
+		ModelState.AddModelErrorList(new List<string>() { "Email veya sifre yanlis", $"Basarisiz giris sayisi ={await _userManager.GetAccessFailedCountAsync(hasUser)}" });
 
 		return View();
 	}
 
 
-	public IActionResult ResetPassword()
+	public IActionResult ForgetPassword()
 	{
 		return View();
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel request)
+	{
+		var hasUser = await _userManager.FindByEmailAsync(request.Email);
+
+		if (hasUser == null)
+		{
+			ModelState.AddModelError(string.Empty, "Bu email adressinə sahib kullanıcı bulunamamışdır.");
+			return View();
+		}
+
+		string passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(hasUser);
+
+		var passswordResetLink = Url.Action("ResetPassword", "Home", new { userId = hasUser.Id, Token = passwordResetToken });
+
+		// ornek link htpps://localhost:7111?userId=12213&token=asdasdsadasdasdasda
+
+		// Email Service
+
+
+		TempData["SuccessMessage"] = "Şifre yeniləmə linkiç e-posta adressinizə göndərilmişdir";
+
+		return RedirectToAction(nameof(ForgetPassword));
 	}
 
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

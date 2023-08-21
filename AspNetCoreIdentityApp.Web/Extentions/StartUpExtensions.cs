@@ -1,6 +1,7 @@
 ﻿using AspNetCoreIdentityApp.Web.CustomValidation;
 using AspNetCoreIdentityApp.Web.Localizations;
 using AspNetCoreIdentityApp.Web.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreIdentityApp.Web.Extentions;
 
@@ -10,6 +11,12 @@ public static class StartUpExtensions
 {
 	public static void AddIdentityWithExtention(this IServiceCollection services)
 	{
+		// Token-a omur vermek
+		services.Configure<DataProtectionTokenProviderOptions>(options =>
+		{
+			options.TokenLifespan = TimeSpan.FromHours(2);
+		});
+
 		services.AddIdentity<AppUser, AppRole>(opt =>
 		{
 			// Identity-nin icerisinde gelen default validationlari oz isteyimize uygun duzeldirik
@@ -28,6 +35,7 @@ public static class StartUpExtensions
 		}).AddUserValidator<UserValidator>()
 		.AddErrorDescriber<LocalizationIdentityErrorDescriber>()
 		.AddPasswordValidator<PasswordValidator>()
+		.AddDefaultTokenProviders() // Deafult token aliriq
 		.AddEntityFrameworkStores<AppDbContext>();
 	}
 }
