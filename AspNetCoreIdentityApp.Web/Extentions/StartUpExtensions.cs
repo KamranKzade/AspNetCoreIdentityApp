@@ -22,7 +22,9 @@ public static class StartUpExtensions
 			opt.Password.RequireUppercase = false;
 			opt.Password.RequireDigit = false;
 
-
+			// Lockout ile bagli melumatlar --> sehv giris eden zaman duzeldilmeli seyler
+			opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+			opt.Lockout.MaxFailedAccessAttempts = 5;
 		}).AddUserValidator<UserValidator>()
 		.AddErrorDescriber<LocalizationIdentityErrorDescriber>()
 		.AddPasswordValidator<PasswordValidator>()

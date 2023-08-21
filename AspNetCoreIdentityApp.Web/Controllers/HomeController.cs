@@ -1,9 +1,9 @@
-﻿using AspNetCoreIdentityApp.Web.Extentions;
-using AspNetCoreIdentityApp.Web.Models;
-using AspNetCoreIdentityApp.Web.ViewModels;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
+using AspNetCoreIdentityApp.Web.Models;
+using AspNetCoreIdentityApp.Web.Extentions;
+using AspNetCoreIdentityApp.Web.ViewModels;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -97,15 +97,21 @@ public class HomeController : Controller
 		// hasUser				  --> emaile uygun gelen userdir
 		// model.Password		  --> paroldur
 		// model.RememberMe		  --> cookiede tutub, yazilan mail ve passwordu yadda saxlayib saxlamamaqdi ( bool ) 
-		// lockoutOnFailure:false --> nece girisden sonra hesabi mueyyen muddetlik kilidlemekdir ( bool )
-		var signInResult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe, lockoutOnFailure: false);
+		// lockoutOnFailure:true  --> nece girisden sonra hesabi mueyyen muddetlik kilidlemekdir ( bool )
+		var signInResult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe, lockoutOnFailure: true);
 
 		if (signInResult.Succeeded)
 		{
 			return Redirect(returnUrl!);
 		}
 
-		ModelState.AddModelErrorList(new List<string>() { "Email veya sifre yanlisdir" });
+		if (signInResult.IsLockedOut)
+		{
+			ModelState.AddModelErrorList(new List<string>() { "3 dakika boyunca giris yapamazsiniz." });
+			return View();
+		}
+
+		ModelState.AddModelErrorList(new List<string>() { "Email veya sifre yanlis", $"Basarisiz giris sayisi ={await _userManager.GetAccessFailedCountAsync(hasUser)}" });
 
 		return View();
 	}
