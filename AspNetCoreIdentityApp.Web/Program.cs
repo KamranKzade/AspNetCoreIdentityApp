@@ -15,6 +15,22 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Identittyni sisteme elave edirik
 builder.Services.AddIdentityWithExtention();
 
+// Cookie-ni appin Configuration-a tanitmaq
+builder.Services.ConfigureApplicationCookie(opt =>
+{
+	var cookieBuilder = new CookieBuilder();
+	cookieBuilder.Name = "UdemyCookie";
+	
+	// Login Path-in veririk
+	opt.LoginPath = new PathString("/Home/SignIn");
+
+	opt.Cookie = cookieBuilder;
+	// Cookie-nin muddeti
+	opt.ExpireTimeSpan = TimeSpan.FromDays(30);
+	// Kullanici expire time erzinde 1 defe giris etse, yeniden cookienin omru expire time qeder uzanir
+	opt.SlidingExpiration = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
