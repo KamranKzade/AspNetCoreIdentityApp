@@ -2,6 +2,7 @@ using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Web.Models;
 using AspNetCoreIdentityApp.Web.OptionsModels;
 using AspNetCoreIdentityApp.Web.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
 	options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"));
+});
+
+// Security Stamp-a interval vermek
+builder.Services.Configure<SecurityStampValidatorOptions>(opt =>
+{
+	opt.ValidationInterval = TimeSpan.FromMinutes(30);
 });
 
 // Burada biz framework-e basa saliriqki, hansisa 1 classin constructorunda
