@@ -21,13 +21,15 @@ public class SignUpViewModel
 	[DataType(DataType.Password)]
 	[Required(ErrorMessage = "Kullanıcı Parol alanı boş bıraxılamaz.")]
 	[Display(Name = "Parol: ")]
-    public string Password { get; set; }
+	[MinLength(6, ErrorMessage = "Şifreniz en az 6 karakter ola bilir")]
+	public string Password { get; set; }
 
 	[DataType(DataType.Password)]
 	[Compare(nameof(Password),ErrorMessage ="Sifre ayni deyildir.")]
 	[Required(ErrorMessage = "Kullanıcı Parol Təkrar alanı boş bıraxılamaz.")]
 	[Display(Name = "Parol Təkrar: ")]
-    public string PasswordConfirm { get; set; }
+	[MinLength(6, ErrorMessage = "Şifreniz en az 6 karakter ola bilir")]
+	public string PasswordConfirm { get; set; }
 
 
     public SignUpViewModel() { }
