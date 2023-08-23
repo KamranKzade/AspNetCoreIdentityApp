@@ -83,6 +83,11 @@ public class HomeController : Controller
 	[HttpPost]
 	public async Task<IActionResult> SignIn(SignInViewModel model, string? returnUrl = null)
 	{
+		if (!ModelState.IsValid)
+		{
+			return View();
+		}
+
 		returnUrl ??= Url.Action("Index", "Home");
 
 		// Emaile gore useri axtaririq
