@@ -24,6 +24,6 @@ public class PasswordChangeViewModel
 	[Required(ErrorMessage = "Kullanıcı Yeni Parol Təkrar alanı boş bıraxılamaz.")]
 	[Display(Name = "Yeni Parol Təkrar: ")]
 	[MinLength(6, ErrorMessage = "Şifreniz en az 6 karakter ola bilir")]
-	public string PasswordConfirm { get; set; } = null!;
+	public string PasswordNewConfirm { get; set; } = null!;
 
 }

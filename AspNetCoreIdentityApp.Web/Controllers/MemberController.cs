@@ -40,4 +40,9 @@ public class MemberController : Controller
 		// return RedirectToAction("Index", "Home");
 	}
 
+	public IActionResult PasswordChange()
+	{
+		return View();
+	}
+
 }
