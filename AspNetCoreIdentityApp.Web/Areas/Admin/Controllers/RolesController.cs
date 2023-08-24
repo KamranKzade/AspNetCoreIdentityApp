@@ -99,6 +99,9 @@ public class RolesController : Controller
 	public async Task<IActionResult> AssignRoleToUser(string id)
 	{
 		var currentUser = await _userManager.FindByIdAsync(id)!;
+
+		ViewBag.userId = id;
+
 		var roles = await _roleManager.Roles.ToListAsync();
 		var userRoles = await _userManager.GetRolesAsync(currentUser);
 
@@ -118,8 +121,27 @@ public class RolesController : Controller
 			roleViewModel.Add(assignRoleToUserViewModel);
 		}
 
-
 		return View(roleViewModel);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> AssignRoleToUser(string userId, List<AssignRoleToUserViewModel> roles)
+	{
+		var userToAssignRoles = (await _userManager.FindByIdAsync(userId))!;
+
+		foreach (var role in roles)
+		{
+			if (role.Exist)
+			{
+				await _userManager.AddToRoleAsync(userToAssignRoles, role.Name);
+			}
+			else
+			{
+				await _userManager.RemoveFromRoleAsync(userToAssignRoles, role.Name);
+			}
+		}
+
+		return RedirectToAction(nameof(HomeController.UserList),"Home");
 	}
 
 
