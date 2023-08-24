@@ -19,8 +19,6 @@ public class UserPictureThumbnailTagHelper : TagHelper
 			output.Attributes.SetAttribute("src", $"/userpictures/{PictureUrl}");
 		}
 
-
-
 		base.Process(context, output);
 	}
 }
