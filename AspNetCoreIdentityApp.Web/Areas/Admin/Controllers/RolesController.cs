@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreIdentityApp.Web.Areas.Admin.Controllers;
 
+[Authorize(Roles = "admin")]
 [Area("Admin")]
 public class RolesController : Controller
 {
@@ -20,7 +21,7 @@ public class RolesController : Controller
 		_roleManager = roleManager;
 	}
 
-	[Authorize(Roles = "admin,role-action")]
+	[Authorize(Roles = "role-action")]
 	public async Task<IActionResult> Index()
 	{
 		var roles = await _roleManager.Roles.Select(x => new RoleViewModel()
@@ -32,13 +33,13 @@ public class RolesController : Controller
 		return View(roles);
 	}
 
-	[Authorize(Roles ="admin,role-action")]
+	[Authorize(Roles = "role-action")]
 	public IActionResult RoleCreate()
 	{
 		return View();
 	}
 
-	[Authorize(Roles = "admin,role-action")]
+	[Authorize(Roles = "role-action")]
 	[HttpPost]
 	public async Task<ActionResult> RoleCreate(RoleCreateViewModel request)
 	{
@@ -53,7 +54,7 @@ public class RolesController : Controller
 		return RedirectToAction(nameof(RolesController.Index));
 	}
 
-	[Authorize(Roles = "admin,role-action")]
+	[Authorize(Roles = "role-action")]
 	public async Task<IActionResult> RoleUpdate(string id)
 	{
 		var roleToUpdate = await _roleManager.FindByIdAsync(id);
@@ -63,7 +64,7 @@ public class RolesController : Controller
 		return View(new RoleUpdateViewModel() { Id = roleToUpdate.Id, Name = roleToUpdate.Name });
 	}
 
-	[Authorize(Roles = "admin,role-action")]
+	[Authorize(Roles = "role-action")]
 	[HttpPost]
 	public async Task<IActionResult> RoleUpdate(RoleUpdateViewModel request)
 	{
@@ -79,7 +80,7 @@ public class RolesController : Controller
 		return View();
 	}
 
-	[Authorize(Roles = "admin,role-action")]
+	[Authorize(Roles = "role-action")]
 	public async Task<IActionResult> RoleDelete(string id)
 	{
 
@@ -145,7 +146,7 @@ public class RolesController : Controller
 			}
 		}
 
-		return RedirectToAction(nameof(HomeController.UserList),"Home");
+		return RedirectToAction(nameof(HomeController.UserList), "Home");
 	}
 
 
