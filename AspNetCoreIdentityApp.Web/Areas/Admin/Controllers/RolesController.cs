@@ -36,7 +36,6 @@ public class RolesController : Controller
 		return View();
 	}
 
-
 	[HttpPost]
 	public async Task<ActionResult> RoleCreate(RoleCreateViewModel request)
 	{
@@ -49,4 +48,30 @@ public class RolesController : Controller
 
 		return RedirectToAction(nameof(RolesController.Index));
 	}
+
+
+	public async Task<IActionResult> RoleUpdate(string id)
+	{
+		var roleToUpdate = await _roleManager.FindByIdAsync(id);
+
+		if (roleToUpdate == null) throw new Exception("Güncəllənəcək role tapilmayib");
+
+		return View(new RoleUpdateViewModel() { Id = roleToUpdate.Id, Name = roleToUpdate.Name });
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> RoleUpdate(RoleUpdateViewModel request)
+	{
+		var roletoUpdate = await _roleManager.FindByIdAsync(request.Id);
+
+		if (roletoUpdate == null) throw new Exception("Güncəllənəcək role tapilmayib");
+
+		roletoUpdate.Name = request.Name;
+
+		await _roleManager.UpdateAsync(roletoUpdate);
+
+		ViewData["SuccessMessage"] = "Role bilgisi güncəllənmişdir";
+		return View();
+	}
+
 }
