@@ -33,7 +33,8 @@ public class MemberController : Controller
 		{
 			UserName = currentUser.UserName,
 			Email = currentUser.Email,
-			PhoneNumber = currentUser.PhoneNumber
+			PhoneNumber = currentUser.PhoneNumber,
+			PictureUrl=currentUser.Picture
 		};
 
 		return View(userViewModel);
