@@ -4,6 +4,7 @@ using AspNetCoreIdentityApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using AspNetCoreIdentityApp.Web.ViewModels;
 using AspNetCoreIdentityApp.Web.Extentions;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -81,4 +82,22 @@ public class MemberController : Controller
 		return View();
 	}
 
+
+	public async Task<IActionResult> UserEdit()
+	{
+		ViewBag.genderList = new SelectList(Enum.GetNames(typeof(Gender)));
+		var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name);
+
+		var userEditViewModel = new UserEditViewModel()
+		{
+			Username = currentUser.UserName,
+			Email = currentUser.Email,
+			Phone = currentUser.PhoneNumber,
+			BirtDate = currentUser.BirthDate,
+			City = currentUser.City,
+			Gender = currentUser.Gender,
+		};
+
+		return View(userEditViewModel);
+	}
 }

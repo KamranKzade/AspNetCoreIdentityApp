@@ -1,12 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
+﻿using AspNetCoreIdentityApp.Web.Models;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace AspNetCoreIdentityApp.Web.ViewModels;
+
 
 public class UserEditViewModel
 {
 	[Required(ErrorMessage = "Kullanıcı Ad alanı boş bıraxılamaz.")]
-	[Display(Name = "Kullanıcı Adi: ")]
+	[Display(Name = "Kullanıcı Adı: ")]
 	public string Username { get; set; } = null!;
 
 	[EmailAddress(ErrorMessage = "Email formati yanlistir")]
@@ -18,15 +20,16 @@ public class UserEditViewModel
 	[Display(Name = "Telefon: ")]
 	public string Phone { get; set; } = null!;
 
+	[DataType(DataType.Date)]
 	[Display(Name = "Doğum tarixi : ")]
 	public DateTime? BirtDate { get; set; }
 
-	[Display(Name = "Doğum Tarixi : ")]
+	[Display(Name = "Şəhər : ")]
 	public string? City { get; set; }
 
 	[Display(Name = "Profil resmi : ")]
 	public IFormFile? Picture { get; set; }
 
 	[Display(Name = "Cinsiyyət: ")]
-	public byte? Gender { get; set; }
+	public Gender? Gender { get; set; }
 }
