@@ -10,6 +10,12 @@
 
 		<h2>Role oluşturma</h2>
 
+		@if (ViewData["SuccessMessage"] != null)
+		{
+			<div class="alert alert-info" role="alert">
+				@ViewData["SuccessMessage"]
+			</div>
+		}
 		<form asp-action="RoleCreate" method="post">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 

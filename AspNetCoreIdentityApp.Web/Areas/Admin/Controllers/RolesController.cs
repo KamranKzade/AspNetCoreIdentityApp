@@ -46,6 +46,7 @@ public class RolesController : Controller
 			ModelState.AddModelErrorList(result.Errors);
 		}
 
+		TempData["SuccessMessage"] = "Role uğurla yaradılmışdır";
 		return RedirectToAction(nameof(RolesController.Index));
 	}
 
@@ -74,4 +75,23 @@ public class RolesController : Controller
 		return View();
 	}
 
+
+	public async Task<IActionResult> RoleDelete(string id)
+	{
+
+		var roletoDelete = await _roleManager.FindByIdAsync(id);
+
+		if (roletoDelete == null) throw new Exception("Silinəcək role tapilmayib");
+
+		var result = await _roleManager.DeleteAsync(roletoDelete);
+
+		if (!result.Succeeded)
+		{
+			//ModelState.AddModelErrorList(result.Errors);
+			throw new Exception(result.Errors.Select(x=>x.Description).First());
+		}
+		TempData["SuccessMessage"] = "Role uğurla silinmişdir";
+
+		return RedirectToAction(nameof(RolesController.Index));
+	}
 }
