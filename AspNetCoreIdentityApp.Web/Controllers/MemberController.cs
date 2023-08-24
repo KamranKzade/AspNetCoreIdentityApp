@@ -170,4 +170,15 @@ public class MemberController : Controller
 
 		return View(userEditViewModel);
 	}
+
+	public IActionResult AccessDenied(string ReturnUrl)
+	{
+		string message = string.Empty;
+
+		message = "Bu sayfanı görməyə icazəniz yoxdur. Icazə almaq üçün yönəticiniz ilə görüşün";
+		ViewBag.message=message;
+
+
+		return View();
+	}
 }

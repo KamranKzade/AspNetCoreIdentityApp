@@ -46,6 +46,7 @@ builder.Services.ConfigureApplicationCookie(opt =>
 	// Login Path-in veririk
 	opt.LoginPath = new PathString("/Home/SignIn");
 	opt.LogoutPath = new PathString("/Member/LogOut");
+	opt.AccessDeniedPath = new PathString("/Member/AccessDenied");
 	opt.Cookie = cookieBuilder;
 	// Cookie-nin muddeti
 	opt.ExpireTimeSpan = TimeSpan.FromDays(30);
