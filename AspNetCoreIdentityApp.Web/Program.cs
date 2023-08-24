@@ -5,6 +5,7 @@ using AspNetCoreIdentityApp.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,10 @@ builder.Services.Configure<SecurityStampValidatorOptions>(opt =>
 {
 	opt.ValidationInterval = TimeSpan.FromMinutes(30);
 });
+
+// wwwroot folderinde ola Userpicture folderine gede bilek deye, ozumuze referance noqtesi olaraq islediyimiz proyekti secdik
+builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Directory.GetCurrentDirectory()));
+
 
 // Burada biz framework-e basa saliriqki, hansisa 1 classin constructorunda
 // IOptions<EmailSettings> gorsen, get datalari EmailSettingsden oxu
