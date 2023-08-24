@@ -1,0 +1,39 @@
+﻿@model AdminModel.RoleCreateViewModel
+
+@{
+	ViewData["Title"] = "RoleCreate";
+}
+
+
+<div class="row">
+	<div class="col-md-6 offset-md-3">
+
+		<h2>Role oluşturma</h2>
+
+		<form asp-action="RoleCreate" method="post">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Name" class="control-label mb-2"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Oluşdur" class="btn btn-primary" />
+			</div>
+		</form>
+
+	</div>
+
+
+	<div class="col-md-6 offset-md-3 mt-3">
+		<a asp-action="Index">Role Listesinə geri dön</a>
+	</div>
+</div>
+
+@section Scripts{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

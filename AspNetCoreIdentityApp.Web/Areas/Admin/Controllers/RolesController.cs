@@ -1,4 +1,6 @@
-﻿using AspNetCoreIdentityApp.Web.Models;
+﻿using AspNetCoreIdentityApp.Web.Areas.Admin.Models;
+using AspNetCoreIdentityApp.Web.Extentions;
+using AspNetCoreIdentityApp.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,5 +21,25 @@ public class RolesController : Controller
 	public IActionResult Index()
 	{
 		return View();
+	}
+
+	[HttpGet]
+	public IActionResult RoleCreate()
+	{
+		return View();
+	}
+
+
+	[HttpPost]
+	public async Task<ActionResult> RoleCreate(RoleCreateViewModel request)
+	{
+		var result = await _roleManager.CreateAsync(new AppRole() { Name = request.Name });
+
+		if (!result.Succeeded)
+		{
+			ModelState.AddModelErrorList(result.Errors);
+		}
+
+		return RedirectToAction(nameof(RolesController.Index));
 	}
 }
