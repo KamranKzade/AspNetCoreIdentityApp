@@ -160,7 +160,7 @@ public class HomeController : Controller
 	}
 
 
-	public async Task<IActionResult> ResetPassword(string userId, string token)
+	public IActionResult ResetPassword(string userId, string token)
 	{
 		TempData["userId"] = userId;
 		TempData["token"] = token;
