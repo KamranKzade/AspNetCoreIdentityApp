@@ -88,10 +88,39 @@ public class RolesController : Controller
 		if (!result.Succeeded)
 		{
 			//ModelState.AddModelErrorList(result.Errors);
-			throw new Exception(result.Errors.Select(x=>x.Description).First());
+			throw new Exception(result.Errors.Select(x => x.Description).First());
 		}
 		TempData["SuccessMessage"] = "Role uğurla silinmişdir";
 
 		return RedirectToAction(nameof(RolesController.Index));
 	}
+
+
+	public async Task<IActionResult> AssignRoleToUser(string id)
+	{
+		var currentUser = await _userManager.FindByIdAsync(id)!;
+		var roles = await _roleManager.Roles.ToListAsync();
+		var userRoles = await _userManager.GetRolesAsync(currentUser);
+
+		var roleViewModel = new List<AssignRoleToUserViewModel>();
+
+		foreach (var role in roles)
+		{
+			var assignRoleToUserViewModel = new AssignRoleToUserViewModel()
+			{
+				Id = role.Id,
+				Name = role.Name
+			};
+
+			if (userRoles.Contains(role.Name))
+				assignRoleToUserViewModel.Exist = true;
+
+			roleViewModel.Add(assignRoleToUserViewModel);
+		}
+
+
+		return View(roleViewModel);
+	}
+
+
 }
