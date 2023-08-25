@@ -1,7 +1,9 @@
+using AspNetCoreIdentityApp.Web.ClaimProviders;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Web.Models;
 using AspNetCoreIdentityApp.Web.OptionsModels;
 using AspNetCoreIdentityApp.Web.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +38,9 @@ builder.Services.AddIdentityWithExtention();
 
 // Request ve responce dongusu oldugu ucun scop veririk
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Cookie elave etmek ucun --> Claim provider i sisteme tanidiriq
+builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 
 // Cookie-ni appin Configuration-a tanitmaq
 builder.Services.ConfigureApplicationCookie(opt =>
