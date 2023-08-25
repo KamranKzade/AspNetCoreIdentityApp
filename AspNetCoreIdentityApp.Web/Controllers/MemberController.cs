@@ -28,10 +28,6 @@ public class MemberController : Controller
 
 	public async Task<IActionResult> Index()
 	{
-		var userClaims = User.Claims.ToList();
-		var email = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
-
-
 		var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name);
 
 		var userViewModel = new UserViewModel
@@ -185,5 +181,19 @@ public class MemberController : Controller
 
 
 		return View();
+	}
+
+
+	[HttpGet]
+	public async Task<IActionResult> Claims()
+	{
+		var userClaimList = User.Claims.Select(x => new ClaimViewModel()
+		{
+			Issuer=x.Issuer,
+			Type=x.Type,
+			Value=x.Value
+		}).ToList();
+
+		return View(userClaimList);
 	}
 }
