@@ -6,6 +6,7 @@ using AspNetCoreIdentityApp.Web.ViewModels;
 using AspNetCoreIdentityApp.Web.Extentions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
+using System.Security.Claims;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -27,6 +28,10 @@ public class MemberController : Controller
 
 	public async Task<IActionResult> Index()
 	{
+		var userClaims = User.Claims.ToList();
+		var email = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
+
+
 		var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name);
 
 		var userViewModel = new UserViewModel
