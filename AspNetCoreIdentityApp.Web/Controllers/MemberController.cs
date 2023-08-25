@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using AspNetCoreIdentityApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -6,7 +7,6 @@ using AspNetCoreIdentityApp.Web.ViewModels;
 using AspNetCoreIdentityApp.Web.Extentions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
-using System.Security.Claims;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
