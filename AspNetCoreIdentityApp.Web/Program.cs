@@ -2,8 +2,10 @@ using AspNetCoreIdentityApp.Web.ClaimProviders;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Web.Models;
 using AspNetCoreIdentityApp.Web.OptionsModels;
+using AspNetCoreIdentityApp.Web.Requirements;
 using AspNetCoreIdentityApp.Web.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,15 +43,23 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Cookie elave etmek ucun --> Claim provider i sisteme tanidiriq
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
 
-// Userlerden City-i Baku olanlari giris etmesi ucun yazdigimiz claim
+
+// Userlere aid olan Claimler
 builder.Services.AddAuthorization(opt =>
 {
+	// city-i Baku olanlari giris etmesi ucun yazdigimiz claim
 	opt.AddPolicy("BakuPolicy", policy =>
 	{
 		policy.RequireClaim("city", "Baku");
 	});
 
+	// ExchangePolicy, hansi ki, uygun user ucun olacaq
+	opt.AddPolicy("ExchangePolicy", policy =>
+	{
+		policy.AddRequirements(new ExchangeExpireRequirement());
+	});
 });
 
 // Cookie-ni appin Configuration-a tanitmaq

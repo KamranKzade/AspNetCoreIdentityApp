@@ -205,4 +205,12 @@ public class MemberController : Controller
 		return View();
 	}
 
+
+	[Authorize(Policy = "ExchangePolicy")]
+	[HttpGet]
+	public IActionResult ExchangePage()
+	{
+		return View();
+	}
+
 }
