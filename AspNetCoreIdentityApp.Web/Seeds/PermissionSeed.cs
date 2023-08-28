@@ -1,5 +1,5 @@
 ﻿using AspNetCoreIdentityApp.Web.Models;
-using AspNetCoreIdentityApp.Web.PermissionsRoot;
+using AspNetCoreIdentityApp.Core.PermissionsRoot;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreIdentityApp.Web.Seeds;
