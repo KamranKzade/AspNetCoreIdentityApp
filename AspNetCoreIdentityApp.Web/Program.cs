@@ -2,6 +2,7 @@ using AspNetCoreIdentityApp.Web.ClaimProviders;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Web.Models;
 using AspNetCoreIdentityApp.Web.OptionsModels;
+using AspNetCoreIdentityApp.Web.PermissionsRoot;
 using AspNetCoreIdentityApp.Web.Requirements;
 using AspNetCoreIdentityApp.Web.Seeds;
 using AspNetCoreIdentityApp.Web.Services;
@@ -67,6 +68,14 @@ builder.Services.AddAuthorization(opt =>
 	opt.AddPolicy("ViolencePolicy", policy =>
 	{
 		policy.AddRequirements(new ViolenceRequirement() { ThresholAge = 18 });
+	});
+
+	// ViolencePolicy, hansi ki, siddet iceren sehifelere yasi 18den kicik olanlar gire bilmesin deye 1 mentiq qururuq 
+	opt.AddPolicy("OrderPermissionReadOrDelete", policy =>
+	{
+		policy.RequireClaim("Permission", Permissions.Order.Read);
+		policy.RequireClaim("Permission", Permissions.Order.Delete);
+		policy.RequireClaim("Permission", Permissions.Stock.Delete);
 	});
 });
 
