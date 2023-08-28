@@ -1,6 +1,6 @@
 ﻿using AspNetCoreIdentityApp.Web.CustomValidation;
 using AspNetCoreIdentityApp.Web.Localizations;
-using AspNetCoreIdentityApp.Web.Models;
+using AspNetCoreIdentityApp.Repository.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreIdentityApp.Web.Extentions;

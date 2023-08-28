@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityApp.Web.Models;
+﻿using AspNetCoreIdentityApp.Repository.Models;
 using AspNetCoreIdentityApp.Core.PermissionsRoot;
 using Microsoft.AspNetCore.Identity;
 

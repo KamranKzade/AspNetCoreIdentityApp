@@ -1,6 +1,6 @@
 using AspNetCoreIdentityApp.Web.ClaimProviders;
 using AspNetCoreIdentityApp.Web.Extentions;
-using AspNetCoreIdentityApp.Web.Models;
+using AspNetCoreIdentityApp.Repository.Models;
 using AspNetCoreIdentityApp.Core.OptionsModels;
 using AspNetCoreIdentityApp.Core.PermissionsRoot;
 using AspNetCoreIdentityApp.Web.Requirements;
@@ -20,7 +20,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-	options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"),options=>
+	{
+		options.MigrationsAssembly("AspNetCoreIdentityApp.Repository");
+	});
 });
 
 // Security Stamp-a interval vermek
