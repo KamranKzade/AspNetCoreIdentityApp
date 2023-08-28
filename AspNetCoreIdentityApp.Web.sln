@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreIdentityApp.Web", "AspNetCoreIdentityApp.Web\AspNetCoreIdentityApp.Web.csproj", "{351EE911-722F-484B-B072-D9AF0EF12FB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreIdentityApp.Web", "AspNetCoreIdentityApp.Web\AspNetCoreIdentityApp.Web.csproj", "{351EE911-722F-484B-B072-D9AF0EF12FB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreIdentityApp.Core", "AspNetCoreIdentityApp.Core\AspNetCoreIdentityApp.Core.csproj", "{F4B2AFFF-D53A-418F-88BC-8E793AB2528C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreIdentityApp.Repository", "AspNetCoreIdentityApp.Repository\AspNetCoreIdentityApp.Repository.csproj", "{C9FB1785-5F85-4A04-918A-BDB76411F4A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreIdentityApp.Service", "AspNetCoreIdentityApp.Service\AspNetCoreIdentityApp.Service.csproj", "{BE769170-F1D2-4A68-B3E4-33FDCDFEC8EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{351EE911-722F-484B-B072-D9AF0EF12FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{351EE911-722F-484B-B072-D9AF0EF12FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{351EE911-722F-484B-B072-D9AF0EF12FB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4B2AFFF-D53A-418F-88BC-8E793AB2528C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4B2AFFF-D53A-418F-88BC-8E793AB2528C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4B2AFFF-D53A-418F-88BC-8E793AB2528C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4B2AFFF-D53A-418F-88BC-8E793AB2528C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9FB1785-5F85-4A04-918A-BDB76411F4A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9FB1785-5F85-4A04-918A-BDB76411F4A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9FB1785-5F85-4A04-918A-BDB76411F4A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9FB1785-5F85-4A04-918A-BDB76411F4A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE769170-F1D2-4A68-B3E4-33FDCDFEC8EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE769170-F1D2-4A68-B3E4-33FDCDFEC8EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE769170-F1D2-4A68-B3E4-33FDCDFEC8EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE769170-F1D2-4A68-B3E4-33FDCDFEC8EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
