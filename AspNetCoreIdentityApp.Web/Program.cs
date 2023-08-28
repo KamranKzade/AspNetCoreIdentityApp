@@ -70,13 +70,23 @@ builder.Services.AddAuthorization(opt =>
 		policy.AddRequirements(new ViolenceRequirement() { ThresholAge = 18 });
 	});
 
-	// ViolencePolicy, hansi ki, siddet iceren sehifelere yasi 18den kicik olanlar gire bilmesin deye 1 mentiq qururuq 
-	opt.AddPolicy("OrderPermissionReadOrDelete", policy =>
+	// Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
+	opt.AddPolicy("Permissions.Order.Read", policy =>
 	{
 		policy.RequireClaim("Permission", Permissions.Order.Read);
-		policy.RequireClaim("Permission", Permissions.Order.Delete);
-		policy.RequireClaim("Permission", Permissions.Stock.Delete);
 	});
+
+    // Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
+    opt.AddPolicy("Permissions.Order.Delete", policy =>
+    {
+        policy.RequireClaim("Permission", Permissions.Order.Delete);
+    });
+
+    // Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
+    opt.AddPolicy("Permissions.Stock.Delete", policy =>
+    {
+        policy.RequireClaim("Permission", Permissions.Stock.Delete);
+    });
 });
 
 // Cookie-ni appin Configuration-a tanitmaq
