@@ -123,10 +123,6 @@ public class HomeController : Controller
 		// lockoutOnFailure:true  --> nece girisden sonra hesabi mueyyen muddetlik kilidlemekdir ( bool )
 		var signInResult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe, lockoutOnFailure: true);
 
-		if (signInResult.Succeeded)
-		{
-			return Redirect(returnUrl!);
-		}
 
 		if (signInResult.IsLockedOut)
 		{
@@ -134,9 +130,23 @@ public class HomeController : Controller
 			return View();
 		}
 
-		ModelState.AddModelErrorList(new List<string>() { "Email veya sifre yanlis", $"Basarisiz giris sayisi ={await _userManager.GetAccessFailedCountAsync(hasUser)}" });
+		if (!signInResult.Succeeded)
+		{
+			ModelState.AddModelErrorList(new List<string>() { "Email veya sifre yanlis", $"Basarisiz giris sayisi ={await _userManager.GetAccessFailedCountAsync(hasUser)}" });
+			return View();
+		}
 
-		return View();
+		// Yoxlayiriqki, userin birtdate-i daxil edilib, eger daxil edilibse claimlere birtdate-e uygun value-nu yaziriq
+		if (hasUser.BirthDate.HasValue)
+		{
+			await _signInManager.SignInWithClaimsAsync(hasUser, model.RememberMe, new[]
+			{
+					new Claim("birhdate", hasUser.BirthDate.Value.ToString())
+			});
+		}
+
+		return Redirect(returnUrl!);
+
 	}
 
 

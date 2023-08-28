@@ -7,6 +7,7 @@ using AspNetCoreIdentityApp.Web.ViewModels;
 using AspNetCoreIdentityApp.Web.Extentions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
+using System.Collections.Generic;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -35,7 +36,7 @@ public class MemberController : Controller
 			UserName = currentUser.UserName,
 			Email = currentUser.Email,
 			PhoneNumber = currentUser.PhoneNumber,
-			PictureUrl=currentUser.Picture
+			PictureUrl = currentUser.Picture
 		};
 
 		return View(userViewModel);
@@ -154,7 +155,18 @@ public class MemberController : Controller
 
 		await _userManager.UpdateSecurityStampAsync(currentUser);
 		await _signInManager.SignOutAsync();
-		await _signInManager.SignInAsync(currentUser, isPersistent: true);
+
+		if (request.BirtDate.HasValue)
+		{
+			await _signInManager.SignInWithClaimsAsync(user: currentUser, isPersistent: true, additionalClaims: new[]
+			{
+						new Claim("birhdate", currentUser.BirthDate!.Value.ToString())
+			});
+		}
+		else
+		{
+			await _signInManager.SignInAsync(currentUser, isPersistent: true);
+		}
 
 		TempData["SuccessMessage"] = "İstidadəçi bilgiləri başarı ilə dəyişdirilmişdir";
 
@@ -177,7 +189,7 @@ public class MemberController : Controller
 		string message = string.Empty;
 
 		message = "Bu sayfanı görməyə icazəniz yoxdur. Icazə almaq üçün yönəticiniz ilə görüşün";
-		ViewBag.message=message;
+		ViewBag.message = message;
 
 
 		return View();
@@ -187,18 +199,18 @@ public class MemberController : Controller
 	[HttpGet]
 	public IActionResult Claims()
 	{
-		var userClaimList =  User.Claims.Select(x => new ClaimViewModel()
+		var userClaimList = User.Claims.Select(x => new ClaimViewModel()
 		{
-			Issuer=x.Issuer,
-			Type=x.Type,
-			Value=x.Value
+			Issuer = x.Issuer,
+			Type = x.Type,
+			Value = x.Value
 		}).ToList();
 
 		return View(userClaimList);
 	}
 
 
-	[Authorize(Policy ="BakuPolicy")]
+	[Authorize(Policy = "BakuPolicy")]
 	[HttpGet]
 	public IActionResult BakuPage()
 	{
