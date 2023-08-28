@@ -5,7 +5,7 @@ using AspNetCoreIdentityApp.Core.OptionsModels;
 using AspNetCoreIdentityApp.Core.PermissionsRoot;
 using AspNetCoreIdentityApp.Web.Requirements;
 using AspNetCoreIdentityApp.Web.Seeds;
-using AspNetCoreIdentityApp.Web.Services;
+using AspNetCoreIdentityApp.Service.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -46,10 +46,14 @@ builder.Services.AddIdentityWithExtention();
 // Request ve responce dongusu oldugu ucun scop veririk
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+// MemberService-i sisteme tanidiriq
+builder.Services.AddScoped<IMemberService, MemberService>();
+
 // Cookie elave etmek ucun --> Claim provider i sisteme tanidiriq
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ViolenceRequirementHandler>();
+
 
 
 // Userlere aid olan Claimler

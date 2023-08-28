@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using AspNetCoreIdentityApp.Repository.Models;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Core.ViewModels;
-using AspNetCoreIdentityApp.Web.Services;
+using AspNetCoreIdentityApp.Service.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Security.Claims;
 
