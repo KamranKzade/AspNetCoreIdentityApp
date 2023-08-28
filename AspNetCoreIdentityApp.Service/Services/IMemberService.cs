@@ -1,4 +1,5 @@
 ﻿using AspNetCoreIdentityApp.Core.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,9 @@ namespace AspNetCoreIdentityApp.Service.Services
 	{
 		Task<UserManager> GetUserViewModelByUserNameAsync(string username);
 		Task LogOutAsync();
+		Task<bool> CheckPasswordAsync(string username, string password);
+		Task<(bool, IEnumerable<IdentityError>?)> ChangePasswordAsync(string userName, string oldPassword, string newPassword);
+
+
 	}
 }
