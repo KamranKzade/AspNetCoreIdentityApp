@@ -20,8 +20,6 @@ public class MemberController : Controller
 	private readonly UserManager<AppUser> _userManager;
 	private readonly IFileProvider _fileProvider;
 	private readonly IMemberService _memberService;
-
-
 	private string userName => User.Identity!.Name!;
 
 
@@ -39,7 +37,6 @@ public class MemberController : Controller
 		return View(await _memberService.GetUserViewModelByUserNameAsync(userName));
 	}
 
-
 	public async Task LogOut()
 	{
 		await _memberService.LogOutAsync();
@@ -56,7 +53,7 @@ public class MemberController : Controller
 		if (!ModelState.IsValid)
 			return View();
 
-		if (!await _memberService.CheckPasswordAsync(userName,request.PasswordOld))
+		if (!await _memberService.CheckPasswordAsync(userName, request.PasswordOld))
 			ModelState.AddModelError(string.Empty, "Eski şifrənin yanlışdır");
 
 		var (isSuccess, errors) = await _memberService.ChangePasswordAsync(userName, request.PasswordOld, request.PasswordNew);
@@ -72,99 +69,31 @@ public class MemberController : Controller
 		return View();
 	}
 
-
 	public async Task<IActionResult> UserEdit()
 	{
-		ViewBag.genderList = new SelectList(Enum.GetNames(typeof(Gender)));
-		var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name);
+		ViewBag.genderList = _memberService.GetGenderSelectList();
 
-		var userEditViewModel = new UserEditViewModel()
-		{
-			Username = currentUser.UserName,
-			Email = currentUser.Email,
-			Phone = currentUser.PhoneNumber,
-			BirtDate = currentUser.BirthDate,
-			City = currentUser.City,
-			Gender = currentUser.Gender,
-		};
-
-		return View(userEditViewModel);
+		return View(await _memberService.GetUserEditViewModelAsync(userName));
 	}
-
 
 	[HttpPost]
 	public async Task<IActionResult> UserEdit(UserEditViewModel request)
 	{
 		if (!ModelState.IsValid)
-		{
 			return View();
-		}
 
-		var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name);
-
-		currentUser.UserName = request.Username;
-		currentUser.Email = request.Email;
-		currentUser.PhoneNumber = request.Phone;
-		currentUser.Gender = request.Gender;
-		currentUser.BirthDate = request.BirtDate;
-		currentUser.City = request.City;
+		var (isSuccess, errors) = await _memberService.EditUserAsync(request, userName);
 
 
-
-		if (request.Picture != null && request.Picture.Length > 0)
+		if (!isSuccess)
 		{
-			// wwwroot folderini aliriq
-			var wwwrootFolder = _fileProvider.GetDirectoryContents("wwwroot");
-			// ozumuzden random file name yaradiriq, sekile vermek ucun
-			var randomFileName = $"{Guid.NewGuid().ToString()}{Path.GetExtension(request.Picture.FileName)}";
-			// requestden gelen sekil ucun yeni pathi veririk
-			var newPicturePath = Path.Combine(wwwrootFolder!.First(x => x.Name == "userpictures").PhysicalPath, randomFileName);
-
-			// Sekili path-e uygun olaraq kayd edirik
-			using var stream = new FileStream(newPicturePath, FileMode.Create);
-			await request.Picture.CopyToAsync(stream);
-
-
-			currentUser.Picture = randomFileName;
-		}
-
-		var updateToUserResult = await _userManager.UpdateAsync(currentUser);
-
-		if (!updateToUserResult.Succeeded)
-		{
-			ModelState.AddModelErrorList(updateToUserResult.Errors);
+			ModelState.AddModelErrorList(errors);
 			return View();
-		}
-
-		await _userManager.UpdateSecurityStampAsync(currentUser);
-		await _signInManager.SignOutAsync();
-
-		if (request.BirtDate.HasValue)
-		{
-			await _signInManager.SignInWithClaimsAsync(user: currentUser, isPersistent: true, additionalClaims: new[]
-			{
-						new Claim("birhdate", currentUser.BirthDate!.Value.ToString())
-			});
-		}
-		else
-		{
-			await _signInManager.SignInAsync(currentUser, isPersistent: true);
 		}
 
 		TempData["SuccessMessage"] = "İstidadəçi bilgiləri başarı ilə dəyişdirilmişdir";
 
-
-		var userEditViewModel = new UserEditViewModel()
-		{
-			Username = currentUser.UserName,
-			Email = currentUser.Email,
-			Phone = currentUser.PhoneNumber,
-			Gender = currentUser.Gender,
-			BirtDate = currentUser.BirthDate,
-			City = currentUser.City
-		};
-
-		return View(userEditViewModel);
+		return View(await _memberService.GetUserEditViewModelAsync(userName));
 	}
 
 	public IActionResult AccessDenied(string ReturnUrl)
@@ -178,18 +107,10 @@ public class MemberController : Controller
 		return View();
 	}
 
-
 	[HttpGet]
 	public IActionResult Claims()
 	{
-		var userClaimList = User.Claims.Select(x => new ClaimViewModel()
-		{
-			Issuer = x.Issuer,
-			Type = x.Type,
-			Value = x.Value
-		}).ToList();
-
-		return View(userClaimList);
+		return View(_memberService.GetClaims(User));
 	}
 
 
