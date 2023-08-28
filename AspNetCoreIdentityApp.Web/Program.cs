@@ -3,6 +3,7 @@ using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Web.Models;
 using AspNetCoreIdentityApp.Web.OptionsModels;
 using AspNetCoreIdentityApp.Web.Requirements;
+using AspNetCoreIdentityApp.Web.Seeds;
 using AspNetCoreIdentityApp.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -87,6 +88,16 @@ builder.Services.ConfigureApplicationCookie(opt =>
 });
 
 var app = builder.Build();
+
+// Permisionlari bura qeyd edirik
+using (var scope = app.Services.CreateScope())
+{
+	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+
+
+	await PermissionSeed.Seed(roleManager);
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
