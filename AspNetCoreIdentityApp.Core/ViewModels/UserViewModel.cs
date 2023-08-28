@@ -1,6 +1,6 @@
 ﻿namespace AspNetCoreIdentityApp.Core.ViewModels;
 
-public class UserViewModel
+public class UserManager
 {
 	public string? UserName { get; set; }
 	public string? Email { get; set; }

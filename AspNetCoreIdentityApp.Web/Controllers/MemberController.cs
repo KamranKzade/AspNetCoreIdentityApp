@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
 using System.Collections.Generic;
 using AspNetCoreIdentityApp.Core.Models;
+using AspNetCoreIdentityApp.Service.Services;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -18,36 +19,30 @@ public class MemberController : Controller
 	private readonly SignInManager<AppUser> _signInManager;
 	private readonly UserManager<AppUser> _userManager;
 	private readonly IFileProvider _fileProvider;
+	private readonly IMemberService _memberService;
 
 
-	public MemberController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, IFileProvider fileProvider)
+	private string userName => User.Identity!.Name!;
+
+
+	public MemberController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, IFileProvider fileProvider, IMemberService memberService)
 	{
 		_signInManager = signInManager;
 		_userManager = userManager;
 		_fileProvider = fileProvider;
+		_memberService = memberService;
 	}
 
 
 	public async Task<IActionResult> Index()
 	{
-		var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name);
-
-		var userViewModel = new UserViewModel
-		{
-			UserName = currentUser.UserName,
-			Email = currentUser.Email,
-			PhoneNumber = currentUser.PhoneNumber,
-			PictureUrl = currentUser.Picture
-		};
-
-		return View(userViewModel);
+		return View(await _memberService.GetUserViewModelByUserNameAsync(userName));
 	}
 
 
 	public async Task LogOut()
 	{
-		await _signInManager.SignOutAsync();
-		// return RedirectToAction("Index", "Home");
+		await _memberService.LogOutAsync();
 	}
 
 	public IActionResult PasswordChange()
