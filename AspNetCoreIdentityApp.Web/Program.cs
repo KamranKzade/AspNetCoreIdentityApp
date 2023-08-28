@@ -44,6 +44,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 // Cookie elave etmek ucun --> Claim provider i sisteme tanidiriq
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, ViolenceRequirementHandler>();
 
 
 // Userlere aid olan Claimler
@@ -59,6 +60,12 @@ builder.Services.AddAuthorization(opt =>
 	opt.AddPolicy("ExchangePolicy", policy =>
 	{
 		policy.AddRequirements(new ExchangeExpireRequirement());
+	});
+
+	// ViolencePolicy, hansi ki, siddet iceren sehifelere yasi 18den kicik olanlar gire bilmesin deye 1 mentiq qururuq 
+	opt.AddPolicy("ViolencePolicy", policy =>
+	{
+		policy.AddRequirements(new ViolenceRequirement() { ThresholAge = 18 });
 	});
 });
 
