@@ -42,13 +42,23 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 // Cookie elave etmek ucun --> Claim provider i sisteme tanidiriq
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 
+// Userlerden City-i Baku olanlari giris etmesi ucun yazdigimiz claim
+builder.Services.AddAuthorization(opt =>
+{
+	opt.AddPolicy("BakuPolicy", policy =>
+	{
+		policy.RequireClaim("city", "Baku");
+	});
+
+});
+
 // Cookie-ni appin Configuration-a tanitmaq
 builder.Services.ConfigureApplicationCookie(opt =>
 {
 	var cookieBuilder = new CookieBuilder();
 	cookieBuilder.Name = "UdemyCookie";
 
-	// Login Path-in veririk
+	// Login Path-in veririk --> hansi ki, girise icazesi olmayan userleri yonlendirdiyimiz sehifeler
 	opt.LoginPath = new PathString("/Home/SignIn");
 	opt.LogoutPath = new PathString("/Member/LogOut");
 	opt.AccessDeniedPath = new PathString("/Member/AccessDenied");

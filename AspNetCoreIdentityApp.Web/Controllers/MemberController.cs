@@ -185,9 +185,9 @@ public class MemberController : Controller
 
 
 	[HttpGet]
-	public async Task<IActionResult> Claims()
+	public IActionResult Claims()
 	{
-		var userClaimList = User.Claims.Select(x => new ClaimViewModel()
+		var userClaimList =  User.Claims.Select(x => new ClaimViewModel()
 		{
 			Issuer=x.Issuer,
 			Type=x.Type,
@@ -196,4 +196,15 @@ public class MemberController : Controller
 
 		return View(userClaimList);
 	}
+
+
+	[Authorize(Policy ="BakuPolicy")]
+	[HttpGet]
+	public IActionResult BakuPage()
+	{
+
+
+		return View();
+	}
+
 }
