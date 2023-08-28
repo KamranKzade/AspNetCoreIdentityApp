@@ -202,8 +202,6 @@ public class MemberController : Controller
 	[HttpGet]
 	public IActionResult BakuPage()
 	{
-
-
 		return View();
 	}
 

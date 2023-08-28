@@ -6,6 +6,7 @@ using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Web.ViewModels;
 using AspNetCoreIdentityApp.Web.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Security.Claims;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -66,17 +67,31 @@ public class HomeController : Controller
 		},
 		request.PasswordConfirm);
 
-		// identity ugurla bas veribse ViewBag ile ekrana melumat otururuk.
-		if (identityResult.Succeeded)
+		if (!identityResult.Succeeded)
 		{
-			TempData["SuccessMessage"] = "Uyelik kayit islemi basarili ile gerceklemistir";
-			return RedirectToAction(nameof(HomeController.SignUp));
+			// identity ugurla olmasa, bu zaman artiq erroru ekrana cixaririq. Extenstion method ile yazdiq
+			ModelState.AddModelErrorList(identityResult.Errors.Select(x => x.Description).ToList());
+			return View();
 		}
 
-		// identity ugurla olmasa, bu zaman artiq erroru ekrana cixaririq. Extenstion method ile yazdiq
-		ModelState.AddModelErrorList(identityResult.Errors.Select(x => x.Description).ToList());
+		// identity ugurla bas veribse ViewBag ile ekrana melumat otururuk.
 
-		return View();
+		// Claim yaratdig, hansi ki, qeydiyyatdan kecen user 10 gir elave istifade ede bilsin deye
+		var exchangeExpireClaim = new Claim("ExchangeExpireDate", DateTime.Now.AddDays(10).ToString());
+		// Cari useri tapdiq, bize gelen user uzerinden 
+		var currentUser = await _userManager.FindByNameAsync(request.Username);
+		// Daha sonra UserClaim cedveline bu useri ve claimi elave etdik
+		var claimResult = await _userManager.AddClaimAsync(currentUser, exchangeExpireClaim);
+
+		if (!claimResult.Succeeded)
+		{
+			// identity ugurla olmasa, bu zaman artiq erroru ekrana cixaririq. Extenstion method ile yazdiq
+			ModelState.AddModelErrorList(claimResult.Errors.Select(x => x.Description).ToList());
+			return View();
+		}
+
+		TempData["SuccessMessage"] = "Uyelik kayit islemi basarili ile gerceklemistir";
+		return RedirectToAction(nameof(HomeController.SignUp));
 	}
 
 
