@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-	options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"),options=>
+	options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"), options =>
 	{
 		options.MigrationsAssembly("AspNetCoreIdentityApp.Repository");
 	});
@@ -83,17 +85,17 @@ builder.Services.AddAuthorization(opt =>
 		policy.RequireClaim("Permission", Permissions.Order.Read);
 	});
 
-    // Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
-    opt.AddPolicy("Permissions.Order.Delete", policy =>
-    {
-        policy.RequireClaim("Permission", Permissions.Order.Delete);
-    });
+	// Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
+	opt.AddPolicy("Permissions.Order.Delete", policy =>
+	{
+		policy.RequireClaim("Permission", Permissions.Order.Delete);
+	});
 
-    // Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
-    opt.AddPolicy("Permissions.Stock.Delete", policy =>
-    {
-        policy.RequireClaim("Permission", Permissions.Stock.Delete);
-    });
+	// Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
+	opt.AddPolicy("Permissions.Stock.Delete", policy =>
+	{
+		policy.RequireClaim("Permission", Permissions.Stock.Delete);
+	});
 });
 
 // Cookie-ni appin Configuration-a tanitmaq
@@ -112,6 +114,15 @@ builder.Services.ConfigureApplicationCookie(opt =>
 	// Kullanici expire time erzinde 1 defe giris etse, yeniden cookienin omru expire time qeder uzanir
 	opt.SlidingExpiration = true;
 });
+
+
+// Facebook ile giris etmek ucun lazim olan configuration
+builder.Services.AddAuthentication().AddFacebook(facebookoptions =>
+{
+	facebookoptions.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+	facebookoptions.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+});
+
 
 var app = builder.Build();
 

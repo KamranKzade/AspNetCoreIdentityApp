@@ -21,7 +21,7 @@ public static class StartUpExtensions
 		{
 			// Identity-nin icerisinde gelen default validationlari oz isteyimize uygun duzeldirik
 			opt.User.RequireUniqueEmail = true;
-			opt.User.AllowedUserNameCharacters = "abcdefghijklmnoprstuvwxyz1234567890_";
+			opt.User.AllowedUserNameCharacters = "abcdefghijklmnoprstuvwxyz1234567890_əöğşü";
 
 			opt.Password.RequiredLength = 6;
 			opt.Password.RequireNonAlphanumeric = false;
