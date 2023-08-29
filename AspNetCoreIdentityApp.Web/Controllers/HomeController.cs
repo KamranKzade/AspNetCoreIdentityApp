@@ -211,11 +211,6 @@ public class HomeController : Controller
 		return View();
 	}
 
-	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public IActionResult Error()
-	{
-		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-	}
 
 	// Facebook ile girisi etmek 
 	public IActionResult FacebookLogin(string ReturnUrl)
@@ -274,8 +269,7 @@ public class HomeController : Controller
 
 						if (loginResult.Succeeded)
 						{
-							//     await signInManager.SignInAsync(user, true);
-
+							// await signInManager.SignInAsync(user, true); // buda duz yoldu ancaq asagidaki kimi yazmaq bize loginin external oldugunu gosteririk.
 							await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, true);
 
 							return Redirect(ReturnUrl);
@@ -300,11 +294,15 @@ public class HomeController : Controller
 				}
 			}
 		}
-
 		List<string> errors = ModelState.Values.SelectMany(x => x.Errors).Select(y => y.ErrorMessage).ToList();
 
 		return View("Error", errors);
-
 	}
 
+
+	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+	public IActionResult Error()
+	{
+		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+	}
 }

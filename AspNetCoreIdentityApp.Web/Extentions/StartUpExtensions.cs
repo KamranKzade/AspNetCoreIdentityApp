@@ -2,6 +2,12 @@
 using AspNetCoreIdentityApp.Web.Localizations;
 using AspNetCoreIdentityApp.Repository.Models;
 using Microsoft.AspNetCore.Identity;
+using AspNetCoreIdentityApp.Service.Services;
+using AspNetCoreIdentityApp.Web.ClaimProviders;
+using AspNetCoreIdentityApp.Web.Requirements;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using AspNetCoreIdentityApp.Core.PermissionsRoot;
 
 namespace AspNetCoreIdentityApp.Web.Extentions;
 
@@ -38,4 +44,86 @@ public static class StartUpExtensions
 		.AddDefaultTokenProviders() // Deafult token aliriq
 		.AddEntityFrameworkStores<AppDbContext>();
 	}
+
+	public static void AddScopedWithExtention(this IServiceCollection services)
+	{
+
+		// Request ve responce dongusu oldugu ucun scop veririk
+		services.AddScoped<IEmailService, EmailService>();
+
+		// MemberService-i sisteme tanidiriq
+		services.AddScoped<IMemberService, MemberService>();
+
+		// Cookie elave etmek ucun --> Claim provider i sisteme tanidiriq
+		services.AddScoped<IClaimsTransformation, UserClaimProvider>();
+		services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
+		services.AddScoped<IAuthorizationHandler, ViolenceRequirementHandler>();
+			
+	}
+
+	public static void AddAuthorizationWithExtention(this IServiceCollection services)
+	{
+		// Userlere aid olan Claimler
+		services.AddAuthorization(opt =>
+		{
+			// city-i Baku olanlari giris etmesi ucun yazdigimiz claim
+			opt.AddPolicy("BakuPolicy", policy =>
+			{
+				policy.RequireClaim("city", "Baku");
+			});
+
+			// ExchangePolicy, hansi ki, uygun user ucun olacaq
+			opt.AddPolicy("ExchangePolicy", policy =>
+			{
+				policy.AddRequirements(new ExchangeExpireRequirement());
+			});
+
+			// ViolencePolicy, hansi ki, siddet iceren sehifelere yasi 18den kicik olanlar gire bilmesin deye 1 mentiq qururuq 
+			opt.AddPolicy("ViolencePolicy", policy =>
+			{
+				policy.AddRequirements(new ViolenceRequirement() { ThresholAge = 18 });
+			});
+
+			// Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
+			opt.AddPolicy("Permissions.Order.Read", policy =>
+			{
+				policy.RequireClaim("Permission", Permissions.Order.Read);
+			});
+
+			// Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
+			opt.AddPolicy("Permissions.Order.Delete", policy =>
+			{
+				policy.RequireClaim("Permission", Permissions.Order.Delete);
+			});
+
+			// Permissionlari veririk, Order ile bagli olan permissionlar ve basqa permissionlari
+			opt.AddPolicy("Permissions.Stock.Delete", policy =>
+			{
+				policy.RequireClaim("Permission", Permissions.Stock.Delete);
+			});
+		});
+
+	}
+
+	public static void ConfigureApplicationCookieWithExtention(this IServiceCollection services)
+	{
+		// Cookie-ni appin Configuration-a tanitmaq
+		services.ConfigureApplicationCookie(opt =>
+		{
+			var cookieBuilder = new CookieBuilder();
+			cookieBuilder.Name = "UdemyCookie";
+
+			// Login Path-in veririk --> hansi ki, girise icazesi olmayan userleri yonlendirdiyimiz sehifeler
+			opt.LoginPath = new PathString("/Home/SignIn");
+			opt.LogoutPath = new PathString("/Member/LogOut");
+			opt.AccessDeniedPath = new PathString("/Member/AccessDenied");
+			opt.Cookie = cookieBuilder;
+			// Cookie-nin muddeti
+			opt.ExpireTimeSpan = TimeSpan.FromDays(30);
+			// Kullanici expire time erzinde 1 defe giris etse, yeniden cookienin omru expire time qeder uzanir
+			opt.SlidingExpiration = true;
+		});
+
+	}
+
 }
