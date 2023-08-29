@@ -148,5 +148,61 @@ namespace AspNetCoreIdentityApp.Service.Services
 				Value = x.Value
 			}).ToList();
 		}
+
+		public async Task<(bool, IEnumerable<IdentityError>?)> SignUpAsync(SignUpViewModel request)
+		{
+			var identityResult = await _userManager.CreateAsync(new AppUser
+			{
+				UserName = request.Username,
+				PhoneNumber = request.Phone,
+				Email = request.Email
+			},
+			request.PasswordConfirm);
+
+			if (!identityResult.Succeeded)
+			{
+				// identity ugurla olmasa, bu zaman artiq erroru ekrana cixaririq. Extenstion method ile yazdiq
+				return (false, identityResult.Errors);
+			}
+
+			return (true, null);
+		}
+
+		public async Task<(bool, IEnumerable<IdentityError>?)> SignUpWithClaimAsync(SignUpViewModel request)
+		{
+			// Claim yaratdig, hansi ki, qeydiyyatdan kecen user 10 gir elave istifade ede bilsin deye
+			var exchangeExpireClaim = new Claim("ExchangeExpireDate", DateTime.Now.AddDays(10).ToString());
+			// Cari useri tapdiq, bize gelen user uzerinden 
+			var currentUser = await _userManager.FindByNameAsync(request.Username);
+			// Daha sonra UserClaim cedveline bu useri ve claimi elave etdik
+			var claimResult = await _userManager.AddClaimAsync(currentUser, exchangeExpireClaim);
+
+			if (!claimResult.Succeeded)
+				return (false, claimResult.Errors);
+
+			return (true, null);
+		}
+
+		public async Task<(AppUser, IEnumerable<IdentityError>?)> CheckUserAsync(string email)
+		{
+			var hasUser = await _userManager.FindByEmailAsync(email);
+
+			if (hasUser == null)
+			{
+				//ModelState.AddModelError(string.Empty, "Bu email adressinə sahib kullanıcı bulunamamışdır.");
+				return (null!, new List<IdentityError>
+				{
+					new IdentityError
+					{
+						Code = string.Empty,
+						Description = "Bu email adressinə sahib kullanıcı bulunamamışdır."
+					}
+				});
+			}
+			return (hasUser, null);
+		}
+
+
+
 	}
 }

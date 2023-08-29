@@ -1,12 +1,11 @@
 ﻿using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using AspNetCoreIdentityApp.Repository.Models;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Core.ViewModels;
 using AspNetCoreIdentityApp.Service.Services;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.Security.Claims;
+using AspNetCoreIdentityApp.Repository.Models;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -18,13 +17,15 @@ public class HomeController : Controller
 	private readonly UserManager<AppUser> _userManager;
 	private readonly SignInManager<AppUser> _signInManager;
 	private readonly IEmailService _emailService;
+	private readonly IMemberService _memberService;
 
-	public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService)
+	public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService, IMemberService memberService)
 	{
 		_logger = logger;
 		_userManager = userManager;
 		_signInManager = signInManager;
 		_emailService = emailService;
+		_memberService = memberService;
 	}
 
 
@@ -59,34 +60,21 @@ public class HomeController : Controller
 		}
 
 		// identity-ni userManager ile yaratmaga calisiriq
-		var identityResult = await _userManager.CreateAsync(new AppUser
-		{
-			UserName = request.Username,
-			PhoneNumber = request.Phone,
-			Email = request.Email
-		},
-		request.PasswordConfirm);
+		var (isSuccess, errors) = await _memberService.SignUpAsync(request);
 
-		if (!identityResult.Succeeded)
+		if (!isSuccess)
 		{
 			// identity ugurla olmasa, bu zaman artiq erroru ekrana cixaririq. Extenstion method ile yazdiq
-			ModelState.AddModelErrorList(identityResult.Errors.Select(x => x.Description).ToList());
+			ModelState.AddModelErrorList(errors);
 			return View();
 		}
 
-		// identity ugurla bas veribse ViewBag ile ekrana melumat otururuk.
+		var (isSuccessForClaim, errorsForClaim) = await _memberService.SignUpWithClaimAsync(request);
 
-		// Claim yaratdig, hansi ki, qeydiyyatdan kecen user 10 gir elave istifade ede bilsin deye
-		var exchangeExpireClaim = new Claim("ExchangeExpireDate", DateTime.Now.AddDays(10).ToString());
-		// Cari useri tapdiq, bize gelen user uzerinden 
-		var currentUser = await _userManager.FindByNameAsync(request.Username);
-		// Daha sonra UserClaim cedveline bu useri ve claimi elave etdik
-		var claimResult = await _userManager.AddClaimAsync(currentUser, exchangeExpireClaim);
-
-		if (!claimResult.Succeeded)
+		if (!isSuccessForClaim)
 		{
 			// identity ugurla olmasa, bu zaman artiq erroru ekrana cixaririq. Extenstion method ile yazdiq
-			ModelState.AddModelErrorList(claimResult.Errors.Select(x => x.Description).ToList());
+			ModelState.AddModelErrorList(errorsForClaim!);
 			return View();
 		}
 
@@ -99,9 +87,7 @@ public class HomeController : Controller
 	public async Task<IActionResult> SignIn(SignInViewModel model, string? returnUrl = null)
 	{
 		if (!ModelState.IsValid)
-		{
 			return View();
-		}
 
 		returnUrl ??= Url.Action("Index", "Home");
 
@@ -149,7 +135,6 @@ public class HomeController : Controller
 
 	}
 
-
 	public IActionResult ForgetPassword()
 	{
 		return View();
@@ -158,11 +143,11 @@ public class HomeController : Controller
 	[HttpPost]
 	public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel request)
 	{
-		var hasUser = await _userManager.FindByEmailAsync(request.Email);
+		var (hasUser,errors) = await _memberService.CheckUserAsync(request.Email);
 
 		if (hasUser == null)
 		{
-			ModelState.AddModelError(string.Empty, "Bu email adressinə sahib kullanıcı bulunamamışdır.");
+			ModelState.AddModelErrorList(errors!);
 			return View();
 		}
 
@@ -183,7 +168,6 @@ public class HomeController : Controller
 
 		return RedirectToAction(nameof(ForgetPassword));
 	}
-
 
 	public IActionResult ResetPassword(string userId, string token)
 	{

@@ -1,4 +1,5 @@
 ﻿using AspNetCoreIdentityApp.Core.ViewModels;
+using AspNetCoreIdentityApp.Repository.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -20,5 +21,9 @@ namespace AspNetCoreIdentityApp.Service.Services
 		SelectList GetGenderSelectList();
 		Task<(bool, IEnumerable<IdentityError>?)> EditUserAsync(UserEditViewModel request, string userName);
 		List<ClaimViewModel> GetClaims(ClaimsPrincipal principal);
+		Task<(bool, IEnumerable<IdentityError>?)> SignUpAsync(SignUpViewModel request);
+		Task<(bool, IEnumerable<IdentityError>?)> SignUpWithClaimAsync(SignUpViewModel request);
+
+		Task<(AppUser, IEnumerable<IdentityError>?)> CheckUserAsync(string email);
 	}
 }
