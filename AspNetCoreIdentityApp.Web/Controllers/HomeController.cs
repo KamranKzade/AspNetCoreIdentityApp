@@ -230,7 +230,16 @@ public class HomeController : Controller
 
 		return new ChallengeResult("Google", properties);
 	}
-	
+
+	public IActionResult MicrosoftLogin(string ReturnUrl)
+	{
+		string RedirectUrl = Url.Action("ExternalResponse", "Home", new { ReturnUrl = ReturnUrl })!;
+
+		var properties = _signInManager.ConfigureExternalAuthenticationProperties("Microsoft", RedirectUrl);
+
+		return new ChallengeResult("Microsoft", properties);
+	}
+
 	public async Task<IActionResult> ExternalResponse(string ReturnUrl = "/")
 	{
 		ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();

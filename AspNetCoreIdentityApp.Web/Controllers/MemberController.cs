@@ -1,15 +1,11 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using AspNetCoreIdentityApp.Repository.Models;
 using Microsoft.AspNetCore.Authorization;
-using AspNetCoreIdentityApp.Core.ViewModels;
-using AspNetCoreIdentityApp.Web.Extentions;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
-using System.Collections.Generic;
-using AspNetCoreIdentityApp.Core.Models;
+using AspNetCoreIdentityApp.Web.Extentions;
+using AspNetCoreIdentityApp.Core.ViewModels;
 using AspNetCoreIdentityApp.Service.Services;
+using AspNetCoreIdentityApp.Repository.Models;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
