@@ -1,12 +1,12 @@
-﻿using AspNetCoreIdentityApp.Web.CustomValidation;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using AspNetCoreIdentityApp.Web.Requirements;
+using AspNetCoreIdentityApp.Service.Services;
 using AspNetCoreIdentityApp.Web.Localizations;
 using AspNetCoreIdentityApp.Repository.Models;
-using Microsoft.AspNetCore.Identity;
-using AspNetCoreIdentityApp.Service.Services;
 using AspNetCoreIdentityApp.Web.ClaimProviders;
-using AspNetCoreIdentityApp.Web.Requirements;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+using AspNetCoreIdentityApp.Web.CustomValidation;
 using AspNetCoreIdentityApp.Core.PermissionsRoot;
 
 namespace AspNetCoreIdentityApp.Web.Extentions;
@@ -27,7 +27,7 @@ public static class StartUpExtensions
 		{
 			// Identity-nin icerisinde gelen default validationlari oz isteyimize uygun duzeldirik
 			opt.User.RequireUniqueEmail = true;
-			opt.User.AllowedUserNameCharacters = "abcdefghijklmnoprstuvwxyz1234567890_əöğşü";
+			opt.User.AllowedUserNameCharacters = "abcdefghijklmnoprstuvwxyz1234567890_əöğşü-";
 
 			opt.Password.RequiredLength = 6;
 			opt.Password.RequireNonAlphanumeric = false;

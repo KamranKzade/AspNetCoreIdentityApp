@@ -20,14 +20,17 @@ public class UserClaimProvider : IClaimsTransformation
 
 		var currentUser = await _userManager.FindByNameAsync(identityUser!.Name);
 
-		if (string.IsNullOrEmpty(currentUser.City)) return principal;
-
-
-		if (!principal.HasClaim(x => x.Type == "City"))
+		if (currentUser != null)
 		{
-			Claim cityClaim = new Claim("city", currentUser.City);
+			if (string.IsNullOrEmpty(currentUser.City)) return principal;
 
-			identityUser.AddClaim(cityClaim);
+
+			if (!principal.HasClaim(x => x.Type == "City"))
+			{
+				Claim cityClaim = new Claim("city", currentUser.City);
+
+				identityUser.AddClaim(cityClaim);
+			}
 		}
 
 		return principal;
