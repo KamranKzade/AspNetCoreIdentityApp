@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using AspNetCoreIdentityApp.Web.Requirements;
@@ -6,11 +8,9 @@ using AspNetCoreIdentityApp.Service.Services;
 using AspNetCoreIdentityApp.Web.Localizations;
 using AspNetCoreIdentityApp.Repository.Models;
 using AspNetCoreIdentityApp.Web.ClaimProviders;
+using AspNetCoreIdentityApp.Core.OptionsModels;
 using AspNetCoreIdentityApp.Web.CustomValidation;
 using AspNetCoreIdentityApp.Core.PermissionsRoot;
-using Microsoft.EntityFrameworkCore;
-using AspNetCoreIdentityApp.Core.OptionsModels;
-using Microsoft.Extensions.FileProviders;
 
 namespace AspNetCoreIdentityApp.Web.Extentions;
 
