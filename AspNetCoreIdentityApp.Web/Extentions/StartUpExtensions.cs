@@ -9,6 +9,8 @@ using AspNetCoreIdentityApp.Web.ClaimProviders;
 using AspNetCoreIdentityApp.Web.CustomValidation;
 using AspNetCoreIdentityApp.Core.PermissionsRoot;
 using Microsoft.EntityFrameworkCore;
+using AspNetCoreIdentityApp.Core.OptionsModels;
+using Microsoft.Extensions.FileProviders;
 
 namespace AspNetCoreIdentityApp.Web.Extentions;
 
@@ -59,7 +61,7 @@ public static class StartUpExtensions
 		services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 		services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
 		services.AddScoped<IAuthorizationHandler, ViolenceRequirementHandler>();
-			
+
 	}
 
 	public static void AddAuthorizationWithExtention(this IServiceCollection services)
@@ -127,7 +129,7 @@ public static class StartUpExtensions
 
 	}
 
-	public static void AddDbContextWithExtentions(this IServiceCollection services, IConfiguration configuration)
+	public static void AddDbContextWithExtention(this IServiceCollection services, IConfiguration configuration)
 	{
 
 		services.AddDbContext<AppDbContext>(options =>
@@ -137,6 +139,47 @@ public static class StartUpExtensions
 				options.MigrationsAssembly("AspNetCoreIdentityApp.Repository");
 			});
 		});
+
+	}
+
+	public static void ConfigureWithExtention(this IServiceCollection services)
+	{
+		// Security Stamp-a interval vermek
+		services.Configure<SecurityStampValidatorOptions>(opt =>
+			{
+				opt.ValidationInterval = TimeSpan.FromMinutes(30);
+			});
+	}
+
+	public static void ConfigureWithExtentionForEmailService(this IServiceCollection services, IConfiguration configuration)
+	{
+		// Burada biz framework-e basa saliriqki, hansisa 1 classin constructorunda
+		// IOptions<EmailSettings> gorsen, get datalari EmailSettingsden oxu
+		services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+	}
+
+	public static void AddAuthenticationWithExtention(this IServiceCollection services, IConfiguration configuration)
+	{
+		// Facebook ile giris etmek ucun lazim olan configuration
+		services.AddAuthentication().AddFacebook(facebookoptions =>
+		{
+			facebookoptions.AppId = configuration["Authentication:Facebook:AppId"];
+			facebookoptions.AppSecret = configuration["Authentication:Facebook:AppSecret"];
+		}).AddGoogle(opt =>
+		{
+			opt.ClientId = configuration["Authentication:Google:ClientID"];
+			opt.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+		}).AddMicrosoftAccount(opt =>
+		{
+			opt.ClientId = configuration["Microsoft:ClientId"];
+			opt.ClientSecret = configuration["Microsoft:ClientSecret"];
+		});
+	}
+
+	public static void AddSingletonWithExtention(this IServiceCollection services)
+	{
+		// wwwroot folderinde ola Userpicture folderine gede bilek deye, ozumuze referance noqtesi olaraq islediyimiz proyekti secdik
+		services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Directory.GetCurrentDirectory()));
 
 	}
 }

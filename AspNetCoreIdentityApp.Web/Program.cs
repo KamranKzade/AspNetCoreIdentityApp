@@ -1,10 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using AspNetCoreIdentityApp.Web.Seeds;
-using Microsoft.Extensions.FileProviders;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Repository.Models;
-using AspNetCoreIdentityApp.Core.OptionsModels;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,47 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContextWithExtentions(builder.Configuration);
-
-// Security Stamp-a interval vermek
-builder.Services.Configure<SecurityStampValidatorOptions>(opt =>
-{
-	opt.ValidationInterval = TimeSpan.FromMinutes(30);
-});
-
-// wwwroot folderinde ola Userpicture folderine gede bilek deye, ozumuze referance noqtesi olaraq islediyimiz proyekti secdik
-builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Directory.GetCurrentDirectory()));
-
-// Burada biz framework-e basa saliriqki, hansisa 1 classin constructorunda
-// IOptions<EmailSettings> gorsen, get datalari EmailSettingsden oxu
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-
-// Identittyni sisteme elave edirik
+builder.Services.AddDbContextWithExtention(builder.Configuration);
+builder.Services.ConfigureWithExtention();
+builder.Services.AddSingletonWithExtention();
+builder.Services.ConfigureWithExtentionForEmailService(builder.Configuration);
 builder.Services.AddIdentityWithExtention();
-
-// Scopelari sisteme tanidiriq
 builder.Services.AddScopedWithExtention();
-
-// Userlere aid olan Claimler
 builder.Services.AddAuthorizationWithExtention();
-
-// Cookie-ni appin Configuration-a tanitmaq
 builder.Services.ConfigureApplicationCookieWithExtention();
-
-// Facebook ile giris etmek ucun lazim olan configuration
-builder.Services.AddAuthentication().AddFacebook(facebookoptions =>
-{
-	facebookoptions.AppId = builder.Configuration["Authentication:Facebook:AppId"];
-	facebookoptions.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
-}).AddGoogle(opt =>
-{
-	opt.ClientId = builder.Configuration["Authentication:Google:ClientID"];
-	opt.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-}).AddMicrosoftAccount(opt =>
-{
-	opt.ClientId = builder.Configuration["Microsoft:ClientId"];
-	opt.ClientSecret = builder.Configuration["Microsoft:ClientSecret"];
-});
+builder.Services.AddAuthenticationWithExtention(builder.Configuration);
 
 
 var app = builder.Build();
@@ -62,7 +27,6 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
 	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
-
 
 	await PermissionSeed.Seed(roleManager);
 }
@@ -84,6 +48,7 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
 // Area-lar ile islemek ucun
 app.MapControllerRoute(
 	name: "areas",
