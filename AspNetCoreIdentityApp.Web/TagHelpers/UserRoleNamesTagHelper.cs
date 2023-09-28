@@ -1,7 +1,7 @@
-﻿using AspNetCoreIdentityApp.Repository.Models;
+﻿using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Text;
+using AspNetCoreIdentityApp.Repository.Models;
 
 namespace AspNetCoreIdentityApp.Web.TagHelpers;
 

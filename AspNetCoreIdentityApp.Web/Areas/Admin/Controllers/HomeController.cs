@@ -1,9 +1,9 @@
-﻿using AspNetCoreIdentityApp.Web.Areas.Admin.Models;
-using AspNetCoreIdentityApp.Repository.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using AspNetCoreIdentityApp.Repository.Models;
+using AspNetCoreIdentityApp.Web.Areas.Admin.Models;
 
 namespace AspNetCoreIdentityApp.Web.Areas.Admin.Controllers;
 

@@ -1,11 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace AspNetCoreIdentityApp.Web.Migrations
 {
-    public partial class update_app_user : Migration
+	public partial class update_app_user : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

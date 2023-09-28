@@ -1,15 +1,10 @@
-﻿using AspNetCoreIdentityApp.Core.Models;
-using AspNetCoreIdentityApp.Core.ViewModels;
-using AspNetCoreIdentityApp.Repository.Models;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using AspNetCoreIdentityApp.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+using AspNetCoreIdentityApp.Core.ViewModels;
+using AspNetCoreIdentityApp.Repository.Models;
 
 namespace AspNetCoreIdentityApp.Service.Services
 {

@@ -1,5 +1,5 @@
-﻿using AspNetCoreIdentityApp.Core.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using AspNetCoreIdentityApp.Core.Models;
 
 namespace AspNetCoreIdentityApp.Repository.Models;
 

@@ -8,6 +8,7 @@ using AspNetCoreIdentityApp.Repository.Models;
 using AspNetCoreIdentityApp.Web.ClaimProviders;
 using AspNetCoreIdentityApp.Web.CustomValidation;
 using AspNetCoreIdentityApp.Core.PermissionsRoot;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreIdentityApp.Web.Extentions;
 
@@ -126,4 +127,16 @@ public static class StartUpExtensions
 
 	}
 
+	public static void AddDbContextWithExtentions(this IServiceCollection services, IConfiguration configuration)
+	{
+
+		services.AddDbContext<AppDbContext>(options =>
+		{
+			options.UseSqlServer(configuration.GetConnectionString("SqlCon"), options =>
+			{
+				options.MigrationsAssembly("AspNetCoreIdentityApp.Repository");
+			});
+		});
+
+	}
 }
