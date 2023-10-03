@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.FileProviders;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Core.ViewModels;
-using AspNetCoreIdentityApp.Service.Services;
 using AspNetCoreIdentityApp.Repository.Models;
+using AspNetCoreIdentityApp.Service.Services.Abstract;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
