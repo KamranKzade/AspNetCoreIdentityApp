@@ -50,6 +50,7 @@ public static class StartUpExtensions
 
 	public static void AddScopedWithExtention(this IServiceCollection services)
 	{
+		services.AddScoped<ITwoFactorService, TwoFactorService>();
 
 		// Request ve responce dongusu oldugu ucun scop veririk
 		services.AddScoped<IEmailService, EmailService>();
