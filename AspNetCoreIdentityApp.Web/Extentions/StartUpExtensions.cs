@@ -14,7 +14,6 @@ using AspNetCoreIdentityApp.Core.PermissionsRoot;
 
 namespace AspNetCoreIdentityApp.Web.Extentions;
 
-
 // Program.cs file-nin pis gune qalmamasi ucun extention methodda yaziriq burani
 public static class StartUpExtensions
 {
