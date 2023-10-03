@@ -11,11 +11,11 @@
 	<div class="dol-md-12">
 		<form asp-action="TwoFactorAuth" method="post">
 			<div class="form-group">
-				<label asp-for="TwoFactorType" class="control-label"></label>
+				<label asp-for="TwoFactorType"></label>
 				<select class="form-control" asp-for="TwoFactorType" asp-items="Html.GetEnumSelectList<TwoFactor>()"></select>
 			</div>
 
-			<div class="form-group mt-3">
+			<div class="form-group my-3">
 				<input type="submit" value="Güncəllə" class="btn btn-success" />
 			</div>
 		</form>
@@ -27,6 +27,15 @@
 		<div class="col-md-12">
 			<div class="alerr alert-warning">
 				@ViewBag.warning
+			</div>
+		</div>
+	}
+
+	@if (TempData["message"] != null)
+	{
+		<div class="col-md-12">
+			<div class="alerr alert-info">
+				@TempData["message"]
 			</div>
 		</div>
 	}

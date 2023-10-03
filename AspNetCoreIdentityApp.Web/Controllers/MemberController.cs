@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using AspNetCoreIdentityApp.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.FileProviders;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Core.ViewModels;
 using AspNetCoreIdentityApp.Service.Services;
 using AspNetCoreIdentityApp.Repository.Models;
-using AspNetCoreIdentityApp.Core.Models;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -139,5 +139,28 @@ public class MemberController : Controller
 		return View(new AuthenticatorViewModel() { TwoFactorType = (TwoFactor)_userManager.FindByNameAsync(userName).Result.TwoFactor! });
 	}
 
+	[HttpPost]
+	public async Task<IActionResult> TwoFactorAuth(AuthenticatorViewModel authenticatorVM)
+	{
+		switch (authenticatorVM.TwoFactorType)
+		{
+			case TwoFactor.None:
+				_userManager.FindByNameAsync(userName).Result.TwoFactorEnabled = false;
+				_userManager.FindByNameAsync(userName).Result.TwoFactor = (sbyte)TwoFactor.None;
+				TempData["message"] = "Iki adımlı kimlik doğrulama tipiniz heçbiri olarak belirlenmişdir";
+				break;
+			case TwoFactor.Email:
+				break;
+			case TwoFactor.Phone:
+				break;
+			case TwoFactor.MicrosoftGoogle:
+				break;
+
+		}
+
+		await _userManager.UpdateAsync(_userManager.FindByNameAsync(userName).Result);
+
+		return View(authenticatorVM);
+	}
 
 }

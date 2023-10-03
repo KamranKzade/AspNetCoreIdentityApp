@@ -1,10 +1,5 @@
 ﻿using AspNetCoreIdentityApp.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AspNetCoreIdentityApp.Core.ViewModels;
 
@@ -17,5 +12,6 @@ public class AuthenticatorViewModel
 	[Required(ErrorMessage = "Doğrulama kodu gərəklidir")]
 	public string VerificationCode { get; set; }
 
+	[Display(Name ="İki adımlı kimlik doğrulama")]
 	public TwoFactor TwoFactorType { get; set; }
 }
