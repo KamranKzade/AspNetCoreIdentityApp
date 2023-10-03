@@ -149,13 +149,18 @@ public class MemberController : Controller
 			unformattedKey = await _userManager.GetAuthenticatorKeyAsync(currentUser);
 		}
 
-
 		AuthenticatorViewModel authenticatorViewModel = new();
 
 		authenticatorViewModel.SharedKey = unformattedKey;
 		authenticatorViewModel.AuthenticatorUri = _twoFactorService.GenerateGrCodeUri(currentUser.Email, unformattedKey);
 
 		return View(authenticatorViewModel);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> TwoFactorWithAuthenticator(AuthenticatorViewModel authenticatorVM)
+	{
+		return View();
 	}
 
 	public IActionResult TwoFactorAuth()
@@ -178,7 +183,7 @@ public class MemberController : Controller
 			case TwoFactor.Phone:
 				break;
 			case TwoFactor.MicrosoftGoogle:
-				break;
+				return RedirectToAction("TwoFactorWithAuthenticator");
 
 		}
 
