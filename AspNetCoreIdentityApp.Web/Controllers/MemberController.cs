@@ -17,15 +17,18 @@ public class MemberController : Controller
 	private readonly UserManager<AppUser> _userManager;
 	private readonly IFileProvider _fileProvider;
 	private readonly IMemberService _memberService;
+	private readonly ITwoFactorService _twoFactorService;
+
 	private string userName => User.Identity!.Name!;
 
 
-	public MemberController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, IFileProvider fileProvider, IMemberService memberService)
+	public MemberController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, IFileProvider fileProvider, IMemberService memberService, ITwoFactorService twoFactorService)
 	{
 		_signInManager = signInManager;
 		_userManager = userManager;
 		_fileProvider = fileProvider;
 		_memberService = memberService;
+		_twoFactorService = twoFactorService;
 	}
 
 
@@ -132,6 +135,27 @@ public class MemberController : Controller
 	public IActionResult ViolencePage()
 	{
 		return View();
+	}
+
+
+	public async Task<IActionResult> TwoFactorWithAuthenticator()
+	{
+		var currentUser = await _userManager.FindByNameAsync(userName);
+		var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(currentUser);
+
+		if (string.IsNullOrEmpty(unformattedKey))
+		{
+			await _userManager.ResetAuthenticatorKeyAsync(currentUser);
+			unformattedKey = await _userManager.GetAuthenticatorKeyAsync(currentUser);
+		}
+
+
+		AuthenticatorViewModel authenticatorViewModel = new();
+
+		authenticatorViewModel.SharedKey = unformattedKey;
+		authenticatorViewModel.AuthenticatorUri = _twoFactorService.GenerateGrCodeUri(currentUser.Email, unformattedKey);
+
+		return View(authenticatorViewModel);
 	}
 
 	public IActionResult TwoFactorAuth()
