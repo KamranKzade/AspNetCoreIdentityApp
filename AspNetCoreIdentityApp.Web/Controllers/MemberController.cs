@@ -6,6 +6,7 @@ using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Core.ViewModels;
 using AspNetCoreIdentityApp.Service.Services;
 using AspNetCoreIdentityApp.Repository.Models;
+using AspNetCoreIdentityApp.Core.Models;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -135,7 +136,7 @@ public class MemberController : Controller
 
 	public IActionResult TwoFactorAuth()
 	{
-		return View();
+		return View(new AuthenticatorViewModel() { TwoFactorType = (TwoFactor)_userManager.FindByNameAsync(userName).Result.TwoFactor! });
 	}
 
 
