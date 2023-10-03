@@ -150,7 +150,8 @@ namespace AspNetCoreIdentityApp.Service.Services
 			{
 				UserName = request.Username,
 				PhoneNumber = request.Phone,
-				Email = request.Email
+				Email = request.Email,
+				TwoFactor = 0
 			},
 			request.PasswordConfirm);
 
