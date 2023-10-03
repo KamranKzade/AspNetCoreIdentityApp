@@ -133,5 +133,10 @@ public class MemberController : Controller
 		return View();
 	}
 
+	public IActionResult TwoFactorAuth()
+	{
+		return View();
+	}
+
 
 }

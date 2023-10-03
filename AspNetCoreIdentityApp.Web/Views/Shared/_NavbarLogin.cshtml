@@ -17,6 +17,7 @@
 					<li><a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a></li>
 				}
 
+				<li><a class="dropdown-item" asp-route-returnUrl="/Home/Index" asp-controller="Member" asp-action="TwoFactorAuth">İki adımlı kimlik doğrulama</a></li>
 				<li><a class="dropdown-item" asp-route-returnUrl="/Home/Index" asp-controller="Member" asp-action="LogOut">Çıkış yap</a></li>
 			</ul>
 		</li>
