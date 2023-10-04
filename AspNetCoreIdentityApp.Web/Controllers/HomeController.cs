@@ -6,6 +6,7 @@ using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Core.ViewModels;
 using AspNetCoreIdentityApp.Repository.Models;
 using AspNetCoreIdentityApp.Service.Services.Abstract;
+using AspNetCoreIdentityApp.Core.Models;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -138,6 +139,24 @@ public class HomeController : Controller
 		return Redirect(returnUrl!);
 
 	}
+
+	public async Task<IActionResult> TwoFactorLogin(string ReturnUrl = "/")
+	{
+		// Cookieden uygun user-e uygun useri tapib geri qaytarir
+		var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+
+		TempData["ReturnUrl"] = ReturnUrl;
+
+
+		switch ((TwoFactor)user.TwoFactor)
+		{
+			case TwoFactor.MicrosoftGoogle:
+				break;
+		}
+
+		return View(new TwoFactorLoginViewModel() { TwoFactorType = (TwoFactor)user.TwoFactor, isRecoveryCode = false, isRememberMe = false, VerificationCode = string.Empty });
+	}
+
 
 	public IActionResult ForgetPassword()
 	{
