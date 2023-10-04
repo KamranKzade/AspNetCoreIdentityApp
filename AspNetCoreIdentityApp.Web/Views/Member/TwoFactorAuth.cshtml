@@ -34,10 +34,25 @@
 	@if (TempData["message"] != null)
 	{
 		<div class="col-md-12">
-			<div class="alerr alert-info">
+			<div class="alert alert-info">
 				@TempData["message"]
 			</div>
 		</div>
 	}
 
+	@if (TempData["recoveryCodes"] != null)
+	{
+		<div class="col-md-12">
+			<div class="alert alert-info">
+				Aşağıdakı kodları güvənli bir yerdə saklayınız. Microsoft/Google Authenticator uyğulamasını kullanamadığınız durumlarda bu kurtalma kodlarını kullanabilirsiniz.
+			</div>
+
+			<div class="alert alert-secondary">
+				@foreach (var item in TempData["recoveryCodes"] as string[])
+				{
+					<strong>@item</strong>
+				}
+			</div>
+		</div>
+	}
 </div>

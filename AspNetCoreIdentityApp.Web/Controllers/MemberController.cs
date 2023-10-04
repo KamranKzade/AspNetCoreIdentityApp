@@ -160,6 +160,31 @@ public class MemberController : Controller
 	[HttpPost]
 	public async Task<IActionResult> TwoFactorWithAuthenticator(AuthenticatorViewModel authenticatorVM)
 	{
+		var currentUser = await _userManager.FindByNameAsync(userName);
+		var verificationCode = authenticatorVM.VerificationCode.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+		var is2FATokenValid = await _userManager.VerifyTwoFactorTokenAsync(currentUser, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+
+		if (is2FATokenValid)
+		{
+			currentUser.TwoFactorEnabled = true;
+			currentUser.TwoFactor = (sbyte)TwoFactor.MicrosoftGoogle;
+
+			var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(currentUser, 5);
+
+			TempData["recoveryCodes"] = recoveryCodes;
+			TempData["message"] = "İki adımlı kimlik doğrulama tipiniz Microsoft/Google Authenticator olarak belirlenmişdir";
+
+			return RedirectToAction("TwoFactorAuth");
+		}
+		else
+		{
+			ModelState.AddModelError("", "Girdiyiniz doğrulama kodu yanlışdır");
+			return View(authenticatorVM);
+		}
+
+
+
 		return View();
 	}
 
