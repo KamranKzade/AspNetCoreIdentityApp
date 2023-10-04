@@ -148,7 +148,7 @@ public class HomeController : Controller
 		TempData["ReturnUrl"] = ReturnUrl;
 
 
-		switch ((TwoFactor)user.TwoFactor)
+		switch ((TwoFactor)user.TwoFactor!)
 		{
 			case TwoFactor.MicrosoftGoogle:
 				break;
