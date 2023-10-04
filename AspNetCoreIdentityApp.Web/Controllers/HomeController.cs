@@ -2,11 +2,11 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using AspNetCoreIdentityApp.Core.Models;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Core.ViewModels;
 using AspNetCoreIdentityApp.Repository.Models;
 using AspNetCoreIdentityApp.Service.Services.Abstract;
-using AspNetCoreIdentityApp.Core.Models;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -271,7 +271,6 @@ public class HomeController : Controller
 
 		return View();
 	}
-
 
 	// Facebook ile girisi etmek 
 	public IActionResult FacebookLogin(string ReturnUrl)

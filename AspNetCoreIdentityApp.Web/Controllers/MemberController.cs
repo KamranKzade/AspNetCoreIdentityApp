@@ -137,7 +137,6 @@ public class MemberController : Controller
 		return View();
 	}
 
-
 	public async Task<IActionResult> TwoFactorWithAuthenticator()
 	{
 		var currentUser = await _userManager.FindByNameAsync(userName);
