@@ -157,7 +157,44 @@ public class HomeController : Controller
 		return View(new TwoFactorLoginViewModel() { TwoFactorType = (TwoFactor)user.TwoFactor, isRecoveryCode = false, isRememberMe = false, VerificationCode = string.Empty });
 	}
 
+	[HttpPost]
+	public async Task<IActionResult> TwoFactorLogin(TwoFactorLoginViewModel twoFactorLoginVM)
+	{
+		var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 
+		ModelState.Clear();
+		bool isSucccessAuth = false;
+
+		if ((TwoFactor)user.TwoFactor! == TwoFactor.MicrosoftGoogle)
+		{
+			Microsoft.AspNetCore.Identity.SignInResult result;
+
+			if (twoFactorLoginVM.isRecoveryCode)
+			{
+				result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(twoFactorLoginVM.VerificationCode);
+			}
+			else
+			{
+				// rememberClient: true  --> Eger istifadeci cixis etse ve yeniden giris etmeye calissa, bu zaman onu 2 terefli yoxlama sehifesine qaytaran deyil ve sehifeye giris edecek
+				// rememberClient: false --> Cixis eden zaman yeniden 2faktorlu qeydiyyat sehifesine gonderecek
+
+				result = await _signInManager.TwoFactorAuthenticatorSignInAsync(twoFactorLoginVM.VerificationCode, twoFactorLoginVM.isRememberMe, rememberClient: false);
+			}
+
+			if (result.Succeeded)
+				isSucccessAuth = true;
+			else
+				ModelState.AddModelError("", "Doğrulama kodu yanlışdır");
+		}
+
+		if (isSucccessAuth)
+		{
+			return RedirectToAction("Index", "Home");
+		}
+
+		twoFactorLoginVM.TwoFactorType = (TwoFactor)user.TwoFactor;
+		return View(twoFactorLoginVM);
+	}
 	public IActionResult ForgetPassword()
 	{
 		return View();
