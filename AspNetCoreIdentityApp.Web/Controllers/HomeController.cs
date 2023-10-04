@@ -109,6 +109,11 @@ public class HomeController : Controller
 		var signInResult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe, lockoutOnFailure: true);
 
 
+		if (signInResult.RequiresTwoFactor)
+		{
+			return RedirectToAction("TwoFactorLogin");
+		}
+
 		if (signInResult.IsLockedOut)
 		{
 			ModelState.AddModelErrorList(new List<string>() { "3 dakika boyunca giris yapamazsiniz." });
