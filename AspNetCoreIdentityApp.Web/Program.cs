@@ -19,6 +19,12 @@ builder.Services.AddAuthorizationWithExtention();
 builder.Services.ConfigureApplicationCookieWithExtention();
 builder.Services.AddAuthenticationWithExtention(builder.Configuration);
 
+// Session-i tanimlamaq
+builder.Services.AddSession(options =>
+{
+	options.IdleTimeout = TimeSpan.FromMinutes(30);
+	options.Cookie.Name = "MainSession";
+});
 
 var app = builder.Build();
 
@@ -47,6 +53,9 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+// Session-i middleware olaraq elave etmek
+app.UseSession();
 
 // Area-lar ile islemek ucun
 app.MapControllerRoute(
