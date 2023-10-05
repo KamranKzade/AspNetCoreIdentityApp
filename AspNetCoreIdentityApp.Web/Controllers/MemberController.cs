@@ -195,14 +195,18 @@ public class MemberController : Controller
 	[HttpPost]
 	public async Task<IActionResult> TwoFactorAuth(AuthenticatorViewModel authenticatorVM)
 	{
+		var currentUser = await _userManager.FindByNameAsync(userName);
 		switch (authenticatorVM.TwoFactorType)
 		{
 			case TwoFactor.None:
-				_userManager.FindByNameAsync(userName).Result.TwoFactorEnabled = false;
-				_userManager.FindByNameAsync(userName).Result.TwoFactor = (sbyte)TwoFactor.None;
+				currentUser.TwoFactorEnabled = false;
+				currentUser.TwoFactor = (sbyte)TwoFactor.None;
 				TempData["message"] = "Iki adımlı kimlik doğrulama tipiniz heçbiri olarak belirlenmişdir";
 				break;
 			case TwoFactor.Email:
+				currentUser.TwoFactorEnabled = true;
+				currentUser.TwoFactor = (sbyte)TwoFactor.Email;
+				TempData["message"] = "İki adımlı kimlik doğrulama tipiniz email olarak belirlənmişdir";
 				break;
 			case TwoFactor.Phone:
 				break;
