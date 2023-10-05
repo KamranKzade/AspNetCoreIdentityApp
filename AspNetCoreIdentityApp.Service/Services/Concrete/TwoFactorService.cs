@@ -18,5 +18,11 @@ public class TwoFactorService : ITwoFactorService
 
 		return string.Format(format, _urlEncoder.Encode("www.aspnetcoreidentity.com"), _urlEncoder.Encode(email), unformattedKey);
 	}
+
+	public int GetCodeVerification()
+	{
+		Random rnd = new Random();
+		return rnd.Next(1000, 9999);
+	}
 }
 
