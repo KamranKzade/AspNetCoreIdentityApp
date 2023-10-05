@@ -63,6 +63,7 @@ public static class StartUpExtensions
 		services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 		services.AddScoped<IAuthorizationHandler, ExchangeExpireRequirementHandler>();
 		services.AddScoped<IAuthorizationHandler, ViolenceRequirementHandler>();
+		services.AddScoped<EmailSender>();
 
 	}
 

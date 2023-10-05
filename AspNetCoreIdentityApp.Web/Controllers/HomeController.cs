@@ -117,6 +117,8 @@ public class HomeController : Controller
 
 		if (signInResult.RequiresTwoFactor)
 		{
+			if (hasUser.TwoFactor == (int)TwoFactor.Email || hasUser.TwoFactor == (int)TwoFactor.Phone)
+				HttpContext.Session.Remove("currentTime");
 			return RedirectToAction("TwoFactorLogin");
 		}
 
