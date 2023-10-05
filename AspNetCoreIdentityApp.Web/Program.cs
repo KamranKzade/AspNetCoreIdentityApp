@@ -18,13 +18,7 @@ builder.Services.AddScopedWithExtention();
 builder.Services.AddAuthorizationWithExtention();
 builder.Services.ConfigureApplicationCookieWithExtention();
 builder.Services.AddAuthenticationWithExtention(builder.Configuration);
-
-// Session-i tanimlamaq
-builder.Services.AddSession(options =>
-{
-	options.IdleTimeout = TimeSpan.FromMinutes(30);
-	options.Cookie.Name = "MainSession";
-});
+builder.Services.AddSessionWithExtention();
 
 var app = builder.Build();
 

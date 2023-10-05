@@ -188,4 +188,14 @@ public static class StartUpExtensions
 		services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Directory.GetCurrentDirectory()));
 
 	}
+
+	public static void AddSessionWithExtention(this IServiceCollection services)
+	{
+		// Session-i tanimlamaq
+		services.AddSession(options =>
+		{
+			options.IdleTimeout = TimeSpan.FromMinutes(30);
+			options.Cookie.Name = "MainSession";
+		});
+	}
 }
