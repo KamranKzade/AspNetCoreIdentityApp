@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using AspNetCoreIdentityApp.Core.Models;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
@@ -143,13 +144,17 @@ public static class StartUpExtensions
 
 	}
 
-	public static void ConfigureWithExtention(this IServiceCollection services)
+	public static void ConfigureWithExtention(this IServiceCollection services, IConfiguration configuration)
 	{
 		// Security Stamp-a interval vermek
 		services.Configure<SecurityStampValidatorOptions>(opt =>
 			{
 				opt.ValidationInterval = TimeSpan.FromMinutes(30);
 			});
+
+		// Option Pattern 
+		services.Configure<TwoFactorOptions>(configuration.GetSection("TwoFactorOptions"));
+
 	}
 
 	public static void ConfigureWithExtentionForEmailService(this IServiceCollection services, IConfiguration configuration)

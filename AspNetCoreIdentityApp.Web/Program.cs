@@ -3,7 +3,6 @@ using AspNetCoreIdentityApp.Web.Seeds;
 using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Repository.Models;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -11,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContextWithExtention(builder.Configuration);
-builder.Services.ConfigureWithExtention();
+builder.Services.ConfigureWithExtention(builder.Configuration);
 builder.Services.AddSingletonWithExtention();
 builder.Services.ConfigureWithExtentionForEmailService(builder.Configuration);
 builder.Services.AddIdentityWithExtention();
