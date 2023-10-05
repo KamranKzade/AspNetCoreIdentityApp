@@ -1,8 +1,8 @@
-﻿using AspNetCoreIdentityApp.Core.Models;
-using AspNetCoreIdentityApp.Service.Services.Abstract;
-using Microsoft.Extensions.Options;
-using SendGrid;
+﻿using SendGrid;
 using SendGrid.Helpers.Mail;
+using Microsoft.Extensions.Options;
+using AspNetCoreIdentityApp.Core.Models;
+using AspNetCoreIdentityApp.Service.Services.Abstract;
 
 namespace AspNetCoreIdentityApp.Service.Services.Concrete;
 

@@ -7,6 +7,7 @@ using AspNetCoreIdentityApp.Web.Extentions;
 using AspNetCoreIdentityApp.Core.ViewModels;
 using AspNetCoreIdentityApp.Repository.Models;
 using AspNetCoreIdentityApp.Service.Services.Abstract;
+using AspNetCoreIdentityApp.Service.Services.Concrete;
 
 namespace AspNetCoreIdentityApp.Web.Controllers;
 
@@ -19,14 +20,18 @@ public class HomeController : Controller
 	private readonly SignInManager<AppUser> _signInManager;
 	private readonly IEmailService _emailService;
 	private readonly IMemberService _memberService;
+	private readonly ITwoFactorService _twoFactorService;
+	private readonly EmailSender _emailSender;
 
-	public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService, IMemberService memberService)
+	public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService, IMemberService memberService, ITwoFactorService twoFactorService, EmailSender emailSender)
 	{
 		_logger = logger;
 		_userManager = userManager;
 		_signInManager = signInManager;
 		_emailService = emailService;
 		_memberService = memberService;
+		_twoFactorService = twoFactorService;
+		_emailSender = emailSender;
 	}
 
 
@@ -151,6 +156,14 @@ public class HomeController : Controller
 		switch ((TwoFactor)user.TwoFactor!)
 		{
 			case TwoFactor.MicrosoftGoogle:
+				break;
+			case TwoFactor.Email:
+				if (_twoFactorService.TimeLeft(HttpContext) == 0)
+					return RedirectToAction("SignIn");
+
+				ViewBag.timeLeft = _twoFactorService.TimeLeft(HttpContext);
+				HttpContext.Session.SetString("codeverification", _emailSender.Send(user.Email));
+
 				break;
 		}
 
